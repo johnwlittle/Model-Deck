@@ -1,3 +1,5 @@
+[![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc/4.0/)
+
 # Model Deck
 
 **by [John W Little](https://johnwlittle.com)**
@@ -37,7 +39,7 @@ My specific goals were to create a simple platform primarily for my own future p
 ## Screenshot
 
 *(Replace this line with an actual screenshot if desired)*
-modeldeckss1.jpg
+![MODEL DECK Screenshot](modeldeckss1.jpg)
 
 ## Getting Started
 
