@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Model Deck</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <style>
+:root {
+  /* Colors */
+  --text-primary:   #E0E0E0; --text-secondary: #888888; --text-accent:    #FFFFFF;
+  --bg-main:        #101013; --bg-container:   #16161A; --bg-panel:       #1A1A1E;
+  --bg-chat:        #101013; --bg-bubble:      #202025; --bg-input:       rgba(0, 0, 0, 0.3);
+  --bg-modal:       #28282E; --bg-overlay:     rgba(0, 0, 0, 0.7);
+  --border-color:   #303035; --shadow-color:   rgba(0, 0, 0, 0.4);
+  --light-color:    #00BFFF; --light-dim-color:rgba(0, 191, 255, 0.15);
+  --error-color:    #FF5555; --link-color:     #888888; --link-hover-color:#BBBBBB;
+  --success-color:  #4CAF50;
+
+  /* Fonts */
+  --ui-font:   'Inter', sans-serif; --mono-font: 'IBM Plex Mono', monospace;
+
+  /* Sizing */
+  --base-size:   16px; --chat-font-size: 1.1rem; --radius:      6px;
+}
+
+/* Reset & Base */
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+html { font-size: var(--base-size); height: 100%; }
+body { background: var(--bg-main); color: var(--text-primary); font-family: var(--ui-font); display: flex; height: 100%; overflow: hidden; }
+
+/* Layout Container */
+.container { display: flex; flex: 1; background: var(--bg-container); margin: 15px; border-radius: var(--radius); box-shadow: 0 0 20px var(--shadow-color); overflow: hidden; height: calc(100% - 30px); }
+
+/* Scrollbar Styling */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: var(--text-secondary); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-primary); }
+
+/* Sidebar */
+.sidebar { width: 300px; flex-shrink: 0; background: var(--bg-panel); padding: 25px 20px; display: flex; flex-direction: column; border-right: 1px solid var(--border-color); overflow-y: auto; position: relative; }
+
+/* Title */
+.title-container { margin-bottom: 15px; }
+.sidebar h2 {
+    font-family: var(--ui-font); font-weight: 700;
+    font-size: 2.4rem; /* User preferred size */
+    text-align: left;
+    color: var(--text-secondary);
+    letter-spacing: 0.2px; /* User preferred spacing */
+    line-height: 1;
+    margin-bottom: 12px;
+    word-break: break-word;
+    padding: 0;
+}
+.sidebar h2 .h2-alt { color: var(--text-accent); font-weight: 700; } /* Color for DECK */
+
+/* Blinking Status Lights */
+.status-lights { display: flex; justify-content: space-between; height: 6px; width: 100%; }
+.status-light { flex-basis: 8%; height: 100%; border-radius: 3px; background-color: var(--light-dim-color); animation: blink-bar 3.5s infinite ease-in-out; }
+@keyframes blink-bar { 0%, 100% { background-color: var(--light-dim-color); box-shadow: none; opacity: 0.5; } 50% { background-color: var(--light-color); box-shadow: 0 0 4px var(--light-color); opacity: 1; } }
+
+.status { font-size: 0.8rem; margin-top: 15px; margin-bottom: 1.5rem; color: var(--text-secondary); text-align: left; min-height: 2.4em; text-transform: uppercase; letter-spacing: 0.5px; word-break: break-word; }
+.status.error { color: var(--error-color); font-weight: bold; }
+.status.success { color: var(--success-color); font-weight: bold; }
+
+/* Settings, System Prompt */
+.settings, .system-prompt-setting { padding: 1rem 0; margin-bottom: 1rem; border-top: 1px solid var(--border-color); }
+.settings { border-bottom: 1px solid var(--border-color); }
+.settings h3, .system-prompt-setting label { font-family: var(--ui-font); font-weight: 600; font-size: 0.85rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-secondary); display: block; }
+.setting-item { display: flex; align-items: center; margin-bottom: 1rem; gap: 10px; }
+.setting-item label { flex-basis: 90px; flex-shrink: 0; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0;}
+.setting-item input[type="range"] { flex-grow: 1; margin: 0; }
+.setting-item span { min-width: 30px; text-align: right; font-size: 0.85rem; font-family: var(--mono-font); color: var(--text-primary); }
+.setting-item input[type="number"] { width: 65px; font-size: 0.85rem; padding: 6px 8px; background: var(--bg-input); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: var(--radius); font-family: var(--mono-font); text-align: center; }
+.setting-item input[type="number"]:focus { outline: none; border-color: var(--light-color); background: #28282e; }
+#systemPrompt { width: 100%; min-height: 80px; font-family: var(--mono-font); font-size: 0.85rem; line-height: 1.5; padding: 8px 10px; background: var(--bg-input); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: var(--radius); resize: vertical; }
+#systemPrompt:focus { outline: none; border-color: var(--light-color); background: #28282e; }
+
+/* Model Details Bar */
+#modelDetails { display: flex; flex-wrap: wrap; justify-content: flex-start; gap: 10px 20px; padding: 8px 25px; border-bottom: 1px solid var(--border-color); background: var(--bg-panel); font-size: 0.75rem; color: var(--text-secondary); min-height: auto; }
+#modelDetails .detail-item { display: flex; gap: 5px; white-space: nowrap; }
+#modelDetails .detail-item span:first-child { opacity: 0.7; color: var(--text-secondary); }
+#modelDetails .detail-item span:last-child { color: var(--text-primary); font-family: var(--mono-font); font-weight: 600; }
+
+/* Pull Model Area */
+.pull-model-container { padding: 1rem 0; margin-bottom: 0.5rem; border-top: 1px solid var(--border-color); display: flex; gap: 10px; align-items: center; }
+#pullModelName { flex-grow: 1; font-size: 0.85rem; padding: 6px 8px; background: var(--bg-input); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: var(--radius); font-family: var(--mono-font); }
+#pullModelName:focus { outline: none; border-color: var(--light-color); background: #28282e; }
+#pullModelBtn { flex-shrink: 0; background: var(--bg-input); border: 1px solid var(--border-color); color: var(--text-secondary); padding: 6px 10px; font-size: 0.8rem; font-family: var(--ui-font); font-weight: 600; cursor: pointer; transition: background 0.2s, color 0.2s, border-color 0.2s; border-radius: var(--radius); display: flex; align-items: center; gap: 5px; }
+#pullModelBtn i { font-size: 0.9em; }
+#pullModelBtn:hover { background: #28282e; color: var(--text-primary); border-color: #444; }
+#pullModelBtn:disabled { cursor: not-allowed; opacity: 0.6; background: var(--bg-input); color: var(--text-secondary); border-color: var(--border-color); }
+
+/* Library Link */
+.library-link { text-align: center; margin-bottom: 1rem; font-size: 0.75rem; }
+.library-link a { color: var(--link-color); text-decoration: none; }
+.library-link a:hover { color: var(--link-hover-color); text-decoration: underline; }
+.library-link i { font-size: 0.8em; margin-left: 3px;}
+
+/* Model List Area */
+.model-list-container { flex-grow: 1; display: flex; flex-direction: column; min-height: 100px; margin: 0 0 1rem 0; padding-top: 1rem; border-top: 1px solid var(--border-color); }
+.model-list { flex-grow: 1; overflow-y: auto; padding: 0; margin: 0 0 0.5rem 0; }
+#showHiddenBtn { background: none; border: none; color: var(--text-secondary); font-size: 0.75rem; text-decoration: underline; cursor: pointer; padding: 5px 0; margin-top: 5px; align-self: center; }
+#showHiddenBtn:hover { color: var(--text-primary); }
+#showHiddenBtn:disabled { cursor: not-allowed; opacity: 0.5; text-decoration: none; }
+
+/* Model Card & Hide Button */
+.model-card { background: transparent; border: none; padding: 10px 5px; margin-bottom: 5px; border-radius: var(--radius); cursor: pointer; transition: background 0.15s; position: relative; display: flex; align-items: center; gap: 10px; }
+.model-card::before { content: ''; display: block; width: 12px; height: 12px; border-radius: 50%; border: 1px solid var(--text-secondary); background: transparent; flex-shrink: 0; transition: border-color 0.15s, background-color 0.15s; }
+.model-card:hover { background: rgba(255, 255, 255, 0.03); }
+.model-card:hover::before { border-color: var(--text-primary); }
+.model-card.selected { background: rgba(255, 255, 255, 0.05); }
+.model-card.selected::before { border-color: var(--light-color); background-color: var(--light-color); box-shadow: 0 0 4px var(--light-color); }
+.model-card h3 { font-family: var(--mono-font); font-size: 0.9rem; font-weight: 400; margin-bottom: 0; color: var(--text-primary); flex-grow: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.model-card p { font-size: 0.7rem; color: var(--text-secondary); margin-left: auto; white-space: nowrap; padding-left: 10px; }
+.hide-model-btn { background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 2px 5px; margin-left: 5px; font-size: 0.9em; opacity: 0.5; transition: opacity 0.2s, color 0.2s; flex-shrink: 0; }
+.model-card:hover .hide-model-btn { opacity: 1; }
+.hide-model-btn:hover { color: var(--text-accent); }
+
+/* Footer Area */
+.sidebar-footer { margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--border-color); }
+.help-buttons { display: flex; justify-content: space-around; margin-bottom: 10px; }
+.help-buttons button { background: none; border: 1px solid var(--border-color); color: var(--text-secondary); border-radius: 50%; width: 30px; height: 30px; font-size: 0.9rem; cursor: pointer; transition: background 0.2s, color 0.2s, border-color 0.2s; display: flex; align-items: center; justify-content: center; }
+.help-buttons button:hover { background: var(--bg-input); color: var(--text-primary); border-color: var(--text-secondary); }
+#refreshModels { background: var(--bg-input); border: 1px solid var(--border-color); color: var(--text-secondary); padding: 10px 15px; font-size: 0.8rem; font-family: var(--ui-font); font-weight: 600; text-transform: uppercase; cursor: pointer; transition: background 0.2s, color 0.2s, border-color 0.2s; border-radius: var(--radius); text-align: center; letter-spacing: 1px; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px; }
+#refreshModels i { font-size: 0.9em; }
+#refreshModels:hover { background: #28282e; color: var(--text-primary); border-color: #444; }
+/* Library link style moved */
+.attribution { margin-top: 10px; text-align: center; font-size: 0.75rem; color: var(--text-secondary); display: flex; align-items: center; justify-content: center; gap: 5px; }
+.attribution .link-icon { font-size: 0.8em; opacity: 0.7; display: inline-block; }
+.attribution a { color: var(--link-color); text-decoration: none; transition: color 0.2s; }
+.attribution a:hover { color: var(--link-hover-color); text-decoration: underline; }
+
+/* Chat Area / Input / Modals etc. */
+.chat-container { flex: 1; display: flex; flex-direction: column; background: var(--bg-chat); overflow: hidden; }
+#modelDetails { display: flex; flex-wrap: wrap; justify-content: flex-start; gap: 10px 20px; padding: 8px 25px; border-bottom: 1px solid var(--border-color); background: var(--bg-panel); font-size: 0.75rem; color: var(--text-secondary); min-height: auto; }
+#modelDetails .detail-item { display: flex; gap: 5px; white-space: nowrap; }
+#modelDetails .detail-item span:first-child { opacity: 0.7; color: var(--text-secondary); }
+#modelDetails .detail-item span:last-child { color: var(--text-primary); font-family: var(--mono-font); font-weight: 600; }
+.messages { flex: 1; padding: 30px 25px; overflow-y: auto; display: flex; flex-direction: column; }
+.initial-placeholder { flex-grow: 1; display: flex; align-items: center; justify-content: center; text-align: center; color: var(--text-accent); font-family: var(--ui-font); font-size: 5vw; font-weight: 700; line-height: 1.1; opacity: 0.15; pointer-events: none; }
+.message { display: flex; margin-bottom: 1.5rem; max-width: 80%; flex-shrink: 0; position: relative; }
+.message.user { justify-content: flex-end; margin-left: 20%; }
+.message.ai { margin-right: 20%; }
+.message-content { padding: 12px 18px; font-size: var(--chat-font-size); font-family: var(--mono-font); line-height: 1.6; white-space: pre-wrap; border: none; border-radius: var(--radius); box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); background: var(--bg-bubble); color: var(--text-primary); animation: fadeIn 0.3s ease forwards; position: relative; width: 100%; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+.copy-btn { position: absolute; top: 8px; right: -5px; background: var(--bg-panel); color: var(--text-secondary); border: 1px solid var(--border-color); border-radius: 4px; padding: 3px 6px; cursor: pointer; font-size: 0.8em; opacity: 0; visibility: hidden; transition: opacity 0.2s, visibility 0.2s, background-color 0.2s, color 0.2s; z-index: 5; }
+.message.ai:hover .copy-btn { opacity: 1; visibility: visible; }
+.copy-btn:hover { background: #28282e; color: var(--text-primary); }
+.copy-btn.copied { color: var(--light-color); }
+.message-content .text-content { white-space: pre-wrap; word-wrap: break-word; }
+.message-content pre { background: var(--bg-code, #282C34); margin: 0.5em 0; padding: 1em; border-radius: var(--radius); overflow: auto; font-family: var(--mono-font); white-space: pre; word-wrap: normal; font-size: 0.9em; line-height: 1.4; }
+.message-content pre code { font-family: inherit; font-size: inherit; line-height: inherit; white-space: inherit; background: none; padding: 0; margin: 0; }
+.streaming-indicator { display: inline-block; width: 8px; height: 1.1em; background-color: var(--text-primary); animation: blink-cursor 1s step-end infinite; margin-left: 4px; vertical-align: text-bottom; opacity: 0; transition: opacity 0.1s; }
+.streaming-indicator.visible { opacity: 1; }
+@keyframes blink-cursor { 0%, 100% { background-color: var(--text-primary); } 50% { background-color: transparent; } }
+.message-input-container { display: flex; align-items: stretch; padding: 10px 15px; border-top: 1px solid var(--border-color); background: var(--bg-panel); gap: 15px; flex-shrink: 0; position: relative; }
+.pull-section { flex-basis: 220px; flex-shrink: 0; display: flex; flex-direction: column; gap: 5px; justify-content: flex-end; padding-bottom: 5px; }
+.pull-section #pullModelName { width: 100%; font-size: 0.8rem; padding: 6px 8px; }
+.pull-section #pullModelBtn { width: 100%; padding: 6px 10px; font-size: 0.8rem; height: 31px; }
+.pull-section .library-link { font-size: 0.7rem; text-align: center; margin-top: 4px; margin-bottom: 0; }
+.pull-section .library-link a { color: var(--link-color); }
+.pull-section .library-link a:hover { color: var(--link-hover-color); }
+.pull-section .library-link i { font-size: 0.8em; margin-left: 3px;}
+.chat-input-section { flex-grow: 1; display: flex; align-items: flex-end; gap: 10px; position: relative; }
+.chat-input-section textarea { flex-grow: 1; }
+.chat-input-section button { flex-shrink: 0; }
+#messageInput { padding: 12px 15px; font-size: var(--chat-font-size); font-family: var(--mono-font); line-height: 1.6; background: var(--bg-input); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: var(--radius); resize: none; min-height: calc(var(--chat-font-size) * 1.6 + 24px); max-height: 150px; overflow-y: auto; }
+#messageInput:focus { outline: none; border-color: var(--light-color); background: #28282e; }
+#sendMessage { background: transparent; border: none; color: var(--text-secondary); padding: 0; font-size: 1.1rem; cursor: pointer; transition: color 0.2s, background-color 0.2s; border-radius: var(--radius); height: calc(var(--chat-font-size) * 1.6 + 24px); min-height: 50px; width: 50px; display: flex; align-items: center; justify-content: center; }
+#sendMessage:hover { color: var(--text-primary); background: rgba(255, 255, 255, 0.05); }
+#sendMessage:disabled { color: #555; cursor: not-allowed; background: transparent; }
+input[type="range"] { -webkit-appearance: none; appearance: none; height: 4px; background: var(--border-color); cursor: pointer; border-radius: 2px; width: 100%; }
+input[type="range"]::-webkit-slider-runnable-track { height: 4px; background: var(--border-color); border-radius: 2px; }
+input[type="range"]::-moz-range-track { height: 4px; background: var(--border-color); border-radius: 2px; }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; background: var(--text-secondary); border: none; cursor: pointer; margin-top: -5px; border-radius: 50%; transition: background 0.2s; }
+input[type="range"]::-moz-range-thumb { width: 14px; height: 14px; background: var(--text-secondary); border: none; cursor: pointer; border-radius: 50%; transition: background 0.2s; }
+input[type="range"]:hover::-webkit-slider-thumb { background: var(--text-primary); }
+input[type="range"]:hover::-moz-range-thumb { background: var(--text-primary); }
+input[type="range"]:focus::-webkit-slider-thumb { box-shadow: 0 0 5px var(--light-color); background: var(--light-color); }
+input[type="range"]:focus::-moz-range-thumb { box-shadow: 0 0 5px var(--light-color); background: var(--light-color); }
+.loading { display: none; width: 16px; height: 16px; border: 3px solid var(--text-secondary); border-top-color: var(--text-primary); border-radius: 50%; animation: spin 0.8s linear infinite; position: absolute; right: 65px; bottom: 17px; z-index: 10; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.help-modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; }
+.help-modal.active { display: flex; align-items: center; justify-content: center; }
+.modal-overlay { position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: var(--bg-overlay); z-index: 1001; }
+.modal-dialog { background-color: var(--bg-modal); color: var(--text-primary); margin: auto; padding: 30px; border: 1px solid var(--border-color); border-radius: var(--radius); width: 90%; max-width: 700px; max-height: 80vh; z-index: 1002; position: relative; box-shadow: 0 5px 25px var(--shadow-color); display: flex; flex-direction: column; }
+.close-modal { position: absolute; top: 10px; right: 15px; color: var(--text-secondary); background: none; border: none; font-size: 1.5rem; line-height: 1; cursor: pointer; padding: 0; }
+.close-modal:hover { color: var(--text-primary); }
+.modal-content { overflow-y: auto; font-size: 0.9rem; line-height: 1.6; }
+.modal-content h3 { color: var(--text-accent); margin-bottom: 1rem; font-size: 1.3rem; font-weight: 600; }
+.modal-content h4 { color: var(--text-primary); margin-top: 1rem; margin-bottom: 0.5rem; font-weight: 600; }
+.modal-content p, .modal-content li { margin-bottom: 1rem; color: var(--text-primary); }
+.modal-content code { background-color: var(--bg-input); padding: 0.2em 0.4em; border-radius: 4px; font-family: var(--mono-font); font-size: 0.9em; color: var(--light-color); }
+.modal-content ul, .modal-content ol { margin-left: 25px; margin-bottom: 1rem; padding-left: 0; }
+.modal-content li { margin-bottom: 0.5rem; }
+.modal-content a { color: var(--light-color); text-decoration: none; }
+.modal-content a:hover { text-decoration: underline; }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="sidebar">
+      <div class="title-container">
+        <h2>MODEL <span class="h2-alt">DECK</span></h2> <div class="status-lights">
+          <span class="status-light" style="animation-delay: 0.1s;"></span> <span class="status-light" style="animation-delay: 0.6s;"></span>
+          <span class="status-light" style="animation-delay: 0.3s;"></span> <span class="status-light" style="animation-delay: 0.9s;"></span>
+          <span class="status-light" style="animation-delay: 0.45s;"></span> <span class="status-light" style="animation-delay: 1.1s;"></span>
+          <span class="status-light" style="animation-delay: 0.7s;"></span> <span class="status-light" style="animation-delay: 1.3s;"></span>
+          <span class="status-light" style="animation-delay: 0.2s;"></span> <span class="status-light" style="animation-delay: 1.0s;"></span>
+          <span class="status-light" style="animation-delay: 0.5s;"></span> <span class="status-light" style="animation-delay: 0.8s;"></span>
+        </div>
+      </div>
+      <div id="status" class="status"></div>
+      <div class="system-prompt-setting">
+        <label for="systemPrompt">System Prompt</label>
+        <textarea id="systemPrompt" placeholder="Optional system prompt..."></textarea>
+      </div>
+      <div class="settings">
+        <h3>Settings</h3>
+        <div class="setting-item">
+          <label for="temperature">Temp</label>
+          <input id="temperature" type="range" min="0" max="1" step="0.1" value="0.7">
+          <span id="temperatureValue">0.7</span>
+        </div>
+        <div class="setting-item">
+          <label for="maxTokens">Max Tokens</label>
+          <input id="maxTokens" type="number" min="10" max="4096" value="2048">
+        </div>
+      </div>
+      <div class="model-list-container">
+          <div class="model-list" id="modelList">
+            <p>Loading models…</p>
+          </div>
+          <button id="showHiddenBtn" disabled>Show Hidden Models (0)</button>
+      </div>
+
+
+      <div class="sidebar-footer">
+         <button id="refreshModels">
+          <i class="fa-solid fa-arrows-rotate"></i>
+          <span>Refresh Models</span>
+        </button>
+        <div class="help-buttons">
+            <button id="gettingStartedBtn" title="Getting Started"><i class="fa-solid fa-circle-question"></i></button>
+            <button id="cliGuideBtn" title="Ollama CLI Guide"><i class="fa-solid fa-terminal"></i></button>
+        </div>
+         <p class="attribution">
+          <span class="link-icon">&#x1F517;</span>
+          by <a href="https://johnwlittle.com" target="_blank" rel="noopener noreferrer">John W Little</a>
+        </p>
+      </div>
+    </div><div class="chat-container">
+      <div id="modelDetails" class="model-details">
+         <span>Select a model to see details.</span>
+      </div>
+
+      <div class="messages" id="messages">
+        </div>
+      <div class="message-input-container">
+        <div class="pull-section">
+            <input type="text" id="pullModelName" placeholder="Pull model:tag...">
+            <button id="pullModelBtn" title="Pull Model">
+                <i class="fa-solid fa-download"></i>
+                <span>Pull</span>
+            </button>
+            <p class="library-link">
+                <a href="https://ollama.com/library" target="_blank" rel="noopener noreferrer">
+                    Browse Library <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+            </p>
+        </div>
+        <div class="chat-input-section">
+            <span id="loading" class="loading"></span>
+            <textarea id="messageInput" placeholder="Type your message…" disabled></textarea>
+            <button id="sendMessage" disabled>
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+        </div>
+      </div></div></div><div id="gettingStartedModal" class="help-modal"> <div class="modal-overlay"></div> <div class="modal-dialog"> <button class="close-modal" title="Close"><i class="fa-solid fa-xmark"></i></button> <div class="modal-content"></div> </div> </div>
+  <div id="cliGuideModal" class="help-modal"> <div class="modal-overlay"></div> <div class="modal-dialog"> <button class="close-modal" title="Close"><i class="fa-solid fa-xmark"></i></button> <div class="modal-content"></div> </div> </div>
+
+  <script>
+    // Removed Prism Config
+
+    const API_BASE = 'http://localhost:11434';
+    const els = {
+      modelList: document.getElementById('modelList'),
+      status:    document.getElementById('status'),
+      refresh:   document.getElementById('refreshModels'),
+      messages:  document.getElementById('messages'),
+      input:     document.getElementById('messageInput'),
+      send:      document.getElementById('sendMessage'),
+      loading:   document.getElementById('loading'),
+      temp:      document.getElementById('temperature'),
+      tempVal:   document.getElementById('temperatureValue'),
+      maxTokens: document.getElementById('maxTokens'),
+      systemPrompt: document.getElementById('systemPrompt'),
+      modelDetails: document.getElementById('modelDetails'),
+      gettingStartedBtn: document.getElementById('gettingStartedBtn'),
+      cliGuideBtn: document.getElementById('cliGuideBtn'),
+      gettingStartedModal: document.getElementById('gettingStartedModal'),
+      cliGuideModal: document.getElementById('cliGuideModal'),
+      showHiddenBtn: document.getElementById('showHiddenBtn'),
+      pullModelName: document.getElementById('pullModelName'),
+      pullModelBtn: document.getElementById('pullModelBtn')
+    };
+    let state = { models: [], selected: null, history: [], hiddenModels: [] };
+
+    // --- Utility Functions ---
+    function escapeHtml(unsafe) { if (!unsafe) return ''; return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
+    function autoGrowTextarea(element) { if (!element) return; element.style.height = "auto"; const maxHeight = parseInt(window.getComputedStyle(element).maxHeight, 10); let newHeight = element.scrollHeight; if (maxHeight && newHeight > maxHeight) { newHeight = maxHeight; element.style.overflowY = 'auto'; } else { element.style.overflowY = 'hidden'; } element.style.height = newHeight + "px"; }
+    function showInitialPlaceholder() { if (!els.messages.querySelector('.initial-placeholder')) { const placeholder = document.createElement('div'); placeholder.className = 'initial-placeholder'; placeholder.textContent = 'SELECT MODEL'; els.messages.innerHTML = ''; els.messages.appendChild(placeholder); } }
+    function removeInitialPlaceholder() { const placeholder = els.messages.querySelector('.initial-placeholder'); if (placeholder) { placeholder.remove(); } }
+    function formatBytes(bytes, decimals = 2) { if (!+bytes) return 'N/A'; const k = 1024; const dm = decimals < 0 ? 0 : decimals; const sizes = ['Bytes', 'KiB', 'MiB', 'GiB', 'TiB']; const i = Math.floor(Math.log(bytes) / Math.log(k)); return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`; }
+    function addCopyButton(messageElement) { if (!messageElement || messageElement.querySelector('.copy-btn')) return; const copyBtn = document.createElement('button'); copyBtn.className = 'copy-btn'; copyBtn.title = 'Copy message'; copyBtn.innerHTML = '<i class="fa-regular fa-copy"></i>'; messageElement.appendChild(copyBtn); }
+    function openModal(modalElement) { if (modalElement) { modalElement.classList.add('active'); } }
+    function closeModal(modalElement) { if (modalElement) { modalElement.classList.remove('active'); } }
+
+    // --- Content Population Functions (Updated Getting Started) ---
+    function populateGettingStarted() {
+         console.log("Populating Getting Started...");
+         const content = `
+             <h3>Getting Started with Model Deck</h3> <p>This application allows you to chat with large language models running locally via Ollama.</p>
+             <h4>Prerequisites:</h4>
+             <ul>
+                 <li><strong>Ollama Installed & Running:</strong> You need the Ollama application installed and running on your computer. Download it from <a href="https://ollama.com" target="_blank" rel="noopener noreferrer">ollama.com</a> and follow their installation instructions. Make sure the Ollama server is running (it usually starts automatically after installation).</li>
+                 <li><strong>Models Downloaded:</strong> You need at least one model downloaded through Ollama. Open your terminal or command prompt and run <code>ollama pull llama3</code> (or replace <code>llama3</code> with another model name like <code>mistral</code>, <code>gemma:2b</code>, etc.). You can also use the "Pull model:tag..." input in this app (bottom left).</li>
+             </ul>
+             <h4>How to Run This App:</h4>
+              <ol>
+                 <li><strong>Save this File:</strong> Save this page as <code>model_deck.html</code>. </li>
+                 <li><strong>Need a Local Web Server (Recommended):</strong> Opening this file directly (<code>file:///...</code>) often fails due to browser security rules (CORS) that block requests to Ollama at <code>http://localhost:11434</code>. The most reliable way is to use a simple local server:</li>
+                 <li><strong>Start Server (Pick One):</strong>
+                    <ol type="a">
+                      <li>Open your Terminal (macOS/Linux) or Command Prompt/PowerShell (Windows).</li>
+                      <li>Navigate to the directory where you saved <code>model_deck.html</code> using the <code>cd</code> command (e.g., <code>cd Downloads</code> or <code>cd path/to/folder</code>).</li>
+                      <li><strong>If Python 3 is installed:</strong> Run this command:<br><code>python3 -m http.server 8000</code><br>(On some systems, you might need to use <code>python</code> instead of <code>python3</code>). Note the port number (8000).</li>
+                      <li><strong>If Node.js/npm is installed:</strong> Run this command:<br><code>npx serve .</code><br>(This usually serves on port 3000. If it asks to install 'serve', type 'y').</li>
+                    </ol>
+                 </li>
+                 <li><strong>Access in Browser:</strong> Open your web browser and go to <br><code>http://localhost:8000</code> (or the port number your server command indicated, like 3000).</li>
+                  <li><strong>Stop the Server:</strong> When finished, go back to the terminal window where you started the server and press <code>Ctrl + C</code>.</li>
+             </ol>
+             <h4>Using the App Interface:</h4>
+             <ul>
+                <li>Select a model from the list on the left.</li>
+                <li>View model details (if available) above the chat area.</li>
+                <li>Adjust settings or add a system prompt in the sidebar.</li>
+                <li>Chat using the input box at the bottom right.</li>
+                <li>Pull new models using the input box at the bottom left.</li>
+                <li>Hide models from the list using the <i class="fa-solid fa-eye-slash"></i> icon. Restore them with the "Show Hidden Models" button.</li>
+             </ul>
+         `;
+         const contentArea = els.gettingStartedModal?.querySelector('.modal-content');
+         if (contentArea) { console.log("Setting Getting Started HTML"); contentArea.innerHTML = content; }
+         else { console.error("Getting Started modal content area not found"); }
+     }
+     function populateCliGuide() {
+         console.log("Populating CLI Guide...");
+         const content = `
+             <h3>Ollama CLI Quick Reference</h3>
+             <p>Common commands for managing Ollama from your terminal:</p>
+             <ul>
+                 <li><code>ollama pull &lt;model&gt;</code>: Downloads a model (e.g., <code>ollama pull llama3</code>).</li>
+                 <li><code>ollama run &lt;model&gt;</code>: Starts an interactive chat session with a model (pulls if necessary).</li>
+                 <li><code>ollama list</code>: Lists all models downloaded to your machine.</li>
+                 <li><code>ollama ps</code>: Shows models currently running in memory.</li>
+                 <li><code>ollama show &lt;model&gt;</code>: Shows details about a specific model.</li>
+                 <li><code>ollama cp &lt;src&gt; &lt;dest&gt;</code>: Creates a copy of an existing model.</li>
+                 <li><code>ollama rm &lt;model&gt;</code>: Deletes a downloaded model.</li>
+                 <li><code>ollama create &lt;name&gt; -f &lt;Modelfile&gt;</code>: Creates a custom model from a Modelfile.</li>
+                 <li><code>ollama serve</code>: Starts the Ollama server manually (if not running as a service).</li>
+                 <li><code>ollama help</code>: Displays help information.</li>
+             </ul>
+             <p>For more details, check the <a href="https://github.com/ollama/ollama" target="_blank" rel="noopener noreferrer">official Ollama documentation</a> on GitHub.</p>
+         `;
+          const contentArea = els.cliGuideModal?.querySelector('.modal-content');
+         if (contentArea) { console.log("Setting CLI Guide HTML"); contentArea.innerHTML = content; }
+         else { console.error("CLI Guide modal content area not found"); }
+     }
+
+    // --- Render Model Details ---
+    function renderModelDetails(model) { if (!els.modelDetails) return; els.modelDetails.innerHTML = ''; if (!model) { els.modelDetails.innerHTML = '<span>Select a model to see details.</span>'; els.modelDetails.style.padding = '8px 25px'; return; } const detailsToShow = {}; if (model.details?.family) detailsToShow['Family'] = model.details.family; if (model.details?.parameter_size) detailsToShow['Parameters'] = model.details.parameter_size; if (model.size) detailsToShow['Size'] = formatBytes(model.size); if (model.details?.quantization_level) detailsToShow['Quantization'] = model.details.quantization_level; if (Object.keys(detailsToShow).length === 0) { els.modelDetails.innerHTML = '<span>No specific details available.</span>'; els.modelDetails.style.padding = '8px 25px'; return; } for (const [label, value] of Object.entries(detailsToShow)) { const itemDiv = document.createElement('div'); itemDiv.className = 'detail-item'; const labelSpan = document.createElement('span'); labelSpan.textContent = `${label}:`; const valueSpan = document.createElement('span'); valueSpan.textContent = value; itemDiv.appendChild(labelSpan); itemDiv.appendChild(valueSpan); els.modelDetails.appendChild(itemDiv); } els.modelDetails.style.padding = '8px 25px'; }
+    function loadHiddenModels() { state.hiddenModels = JSON.parse(localStorage.getItem('hiddenModels') || '[]'); updateShowHiddenButton(); }
+    function saveHiddenModels() { localStorage.setItem('hiddenModels', JSON.stringify(state.hiddenModels)); updateShowHiddenButton(); }
+    function updateShowHiddenButton() { const count = state.hiddenModels.length; els.showHiddenBtn.textContent = `Show Hidden Models (${count})`; els.showHiddenBtn.disabled = count === 0; }
+
+    // --- Core App Logic ---
+    async function initialize() { loadHiddenModels(); showStatus('Connecting to API...', 'info'); showInitialPlaceholder(); renderModelDetails(null); els.input.disabled = true; els.send.disabled = true; try { let apiOk = false; try { const versionRes = await fetch(`${API_BASE}/api/version`); if (versionRes.ok) { apiOk = true; } else { const baseRes = await fetch(API_BASE); if (baseRes.ok) { apiOk = true; } } } catch (e) { apiOk = true; console.warn("Initial API check failed, proceeding...", e)} if (!apiOk) throw new Error('Cannot reach Ollama API'); showStatus('Loading models...', 'info'); await loadModels(); bindEvents(); els.input.addEventListener('input', () => autoGrowTextarea(els.input)); autoGrowTextarea(els.input); } catch (e) { showStatus(`Error: ${e.message}. Is Ollama running at ${API_BASE}?`, 'error'); els.modelList.innerHTML = `<p style="color: var(--error-color);">API connection failed.</p>`; showInitialPlaceholder(); renderModelDetails(null); } }
+
+    // --- loadModels ---
+    async function loadModels() { console.log("Attempting to load models..."); const refreshButton = els.refresh; const originalButtonHTML = refreshButton.innerHTML; refreshButton.disabled = true; refreshButton.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Refreshing...`; els.modelList.innerHTML = '<p>Loading models…</p>'; showStatus('Fetching models...', 'info'); try { let models = [], ok = false; try { console.log(`Workspaceing from ${API_BASE}/api/tags`); const r = await fetch(`${API_BASE}/api/tags`); console.log(`/api/tags status: ${r.status}`); if (!r.ok) throw new Error(`/api/tags failed with status ${r.status}`); const j = await r.json(); console.log("Data from /api/tags:", j); models = (j.models || []); ok = true; } catch (tagsError) { console.warn("/api/tags failed:", tagsError.message, "Trying /v1/models..."); try { console.log(`Workspaceing from ${API_BASE}/v1/models`); const r = await fetch(`${API_BASE}/v1/models`); console.log(`/v1/models status: ${r.status}`); if (!r.ok) throw new Error(`/v1/models failed with status ${r.status}`); const j = await r.json(); console.log("Data from /v1/models:", j); models = (j.data || []).map(m => ({ name: m.id, modified_at: m.created ? new Date(m.created * 1000).toISOString() : new Date().toISOString(), size: 0, details: null })); ok = true; } catch (v1Error) { console.error("Both /api/tags and /v1/models failed:", tagsError, v1Error); throw new Error(`Failed to fetch models. /api/tags: ${tagsError.message}. /v1/models: ${v1Error.message}`); } } if (ok) { state.models = models.sort((a, b) => new Date(b.modified_at) - new Date(a.modified_at)); console.log("Processed models:", state.models); renderModels(); if (state.models.length > 0) { showStatus(`${state.models.length} model(s) loaded. Select one.`, 'info'); } else { showStatus(`No models found at ${API_BASE}. Use 'ollama pull'.`, 'warning'); } } else { throw new Error('Model fetching attempt failed without success.'); } if (!state.selected) { showInitialPlaceholder(); renderModelDetails(null);} else { const currentSelectedData = state.models.find(m => m.name === state.selected.name); renderModelDetails(currentSelectedData); removeInitialPlaceholder(); } } catch (e) { console.error("Final error in loadModels:", e); showStatus(`Error loading models: ${e.message}`, 'error'); els.modelList.innerHTML = `<p style="color: var(--error-color);">${e.message}. Check API endpoint and Ollama status.</p>`; showInitialPlaceholder(); renderModelDetails(null); } finally { refreshButton.disabled = false; refreshButton.innerHTML = originalButtonHTML; } }
+
+    // --- renderModels ---
+     function renderModels() { if (!els.modelList) return; const visibleModels = state.models.filter(m => !state.hiddenModels.includes(m.name)); if (!visibleModels || visibleModels.length === 0) { els.modelList.innerHTML = `<p>No visible models${state.models.length > 0 ? ' (all hidden)' : ''}.</p>`; updateShowHiddenButton(); return; } els.modelList.innerHTML = visibleModels.map(m => `<div class="model-card${state.selected?.name === m.name ? ' selected':''}" data-model="${m.name}"><h3>${escapeHtml(m.name)}</h3> <p>${new Date(m.modified_at).toLocaleDateString()}</p> <button class="hide-model-btn" title="Hide model" data-model-hide="${escapeHtml(m.name)}"><i class="fa-solid fa-eye-slash"></i></button></div>`).join(''); document.querySelectorAll('.model-card').forEach(card => { card.addEventListener('click', (e) => { if (!e.target.closest('.hide-model-btn')) { selectModel(card.dataset.model) } }); }); updateShowHiddenButton(); }
+
+     // --- selectModel ---
+     function selectModel(name) { removeInitialPlaceholder(); state.selected = state.models.find(m => m.name === name) || null; state.history = []; renderModels(); renderModelDetails(state.selected); els.messages.innerHTML = ''; const aiMsgDiv = addMessage('ai', `Ready with ${name}.`); addCopyButton(aiMsgDiv); els.input.disabled = false; els.send.disabled = false; els.input.focus(); autoGrowTextarea(els.input); showStatus(`Selected: ${name}`, 'info'); }
+
+     // --- sendMessage ---
+     async function sendMessage() { const text = els.input.value.trim(); const systemPrompt = els.systemPrompt.value.trim(); if (!text || !state.selected) { if (!state.selected) showStatus('Please select a model first.', 'error'); return; } removeInitialPlaceholder(); const userMsgDiv = addMessage('user', text); state.history.push({ role:'user', content:text }); els.input.value = ''; autoGrowTextarea(els.input); let messagesToSend = []; if (systemPrompt) { messagesToSend.push({ role: 'system', content: systemPrompt }); } messagesToSend = messagesToSend.concat(state.history); els.input.disabled = els.send.disabled = true; els.loading.style.display = 'block'; let aiMsgElement = null; let streamingIndicator = null; let messageContentElement = null; let fullResponse = ''; try { const opts = { model: state.selected.name, messages: messagesToSend, stream: true, options: { temperature: parseFloat(els.temp.value), num_predict: parseInt(els.maxTokens.value, 10) || 1024 }}; const apiEndpoint = `${API_BASE}/api/chat`; const resp = await fetch(apiEndpoint, { method:'POST', headers:{ 'Content-Type':'application/json' }, body:JSON.stringify(opts) }); if (!resp.ok || !resp.body) { let errorMsg = `API error ${resp.status}`; try { const errorJson = await resp.json(); errorMsg += `: ${errorJson.error || resp.statusText}`; } catch {} throw new Error(errorMsg); } const reader = resp.body.getReader(); const decoder = new TextDecoder(); aiMsgElement = addMessage('ai', ''); messageContentElement = aiMsgElement.querySelector('.message-content'); const textContentElement = messageContentElement.querySelector('.text-content'); streamingIndicator = messageContentElement.querySelector('.streaming-indicator'); if (streamingIndicator) streamingIndicator.classList.add('visible'); fullResponse = ''; let done = false; while (!done) { const { value, done: streamDone } = await reader.read(); done = streamDone; if (value) { const chunk = decoder.decode(value, { stream: true }); const lines = chunk.split('\n').filter(line => line.trim() !== ''); for (const line of lines) { try { const data = JSON.parse(line); const delta = data.message?.content ?? data.response ?? ''; if (delta) { fullResponse += delta; textContentElement.appendChild(document.createTextNode(delta)); els.messages.scrollTop = els.messages.scrollHeight; } if (data.done) { done = true; } } catch (e) { console.error('Error parsing stream chunk:', line, e); } } } } if (fullResponse) { state.history.push({ role:'assistant', content: fullResponse }); } if (aiMsgElement) { addCopyButton(aiMsgElement); } } catch(e) { if (aiMsgElement) { const textContentElement = aiMsgElement.querySelector('.message-content .text-content'); textContentElement.appendChild(document.createTextNode(`\n\nError: ${e.message}`)); } else { addMessage('ai', `Error: ${e.message}`); } showStatus(`Error: ${e.message}`, 'error'); } finally { els.loading.style.display = 'none'; if (streamingIndicator) streamingIndicator.classList.remove('visible'); if (aiMsgElement && !aiMsgElement.querySelector('.copy-btn')) { addCopyButton(aiMsgElement); } if (state.selected) { els.input.disabled = els.send.disabled = false; els.input.focus(); autoGrowTextarea(els.input); } else { els.input.disabled = els.send.disabled = true; } } }
+
+    // --- addMessage ---
+    function addMessage(who, text) { removeInitialPlaceholder(); const msgDiv = document.createElement('div'); msgDiv.className = `message ${who}`; const contentDiv = document.createElement('div'); contentDiv.className = 'message-content'; const textSpan = document.createElement('span'); textSpan.className = 'text-content'; textSpan.appendChild(document.createTextNode(text)); contentDiv.appendChild(textSpan); if (who === 'ai') { const indicatorSpan = document.createElement('span'); indicatorSpan.className = 'streaming-indicator'; contentDiv.appendChild(indicatorSpan); } msgDiv.appendChild(contentDiv); els.messages.appendChild(msgDiv); els.messages.scrollTop = els.messages.scrollHeight; return msgDiv; }
+
+     // --- showStatus ---
+     function showStatus(msg, type = 'info') { if (!els.status) return; els.status.textContent = msg; els.status.className = `status ${type}`; }
+
+     // --- Pull Model Function ---
+     async function pullModel(modelName) { if (!modelName || !modelName.trim()) { showStatus('Please enter a model name to pull.', 'error'); return; } console.log(`Pull requested for: ${modelName}`); const pullButton = els.pullModelBtn; const originalButtonHTML = pullButton.innerHTML; pullButton.disabled = true; pullButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; showStatus(`Pulling ${modelName}...`, 'info'); let pullErrorOccurred = false; let pullErrorMessage = ''; try { const requestBody = JSON.stringify({ name: modelName, stream: true }); console.log(`Sending POST to ${API_BASE}/api/pull with body:`, requestBody); const response = await fetch(`${API_BASE}/api/pull`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: requestBody }); console.log(`Pull API response status: ${response.status}`); if (!response.ok || !response.body) { let errorMsg = `API error ${response.status}`; if (!response.ok) { try { const errorJson = await response.json(); errorMsg += `: ${errorJson.error || 'Unknown API error'}`; } catch (e) { errorMsg += `: ${response.statusText || 'Unknown API error'}`; } } throw new Error(errorMsg); } const reader = response.body.getReader(); const decoder = new TextDecoder(); let done = false; while (!done) { const { value, done: streamDone } = await reader.read(); done = streamDone; if (value) { const chunk = decoder.decode(value, { stream: true }); console.log("Pull stream chunk:", chunk); const lines = chunk.split('\n').filter(line => line.trim() !== ''); for (const line of lines) { try { const data = JSON.parse(line); console.log('Parsed pull status:', data); if (data.error) { pullErrorOccurred = true; pullErrorMessage = data.error; console.error("Error from pull stream:", pullErrorMessage); done = true; break; } if (data.status) { let displayStatus = data.status; if (data.digest && data.total && data.completed) { const percent = Math.round((data.completed / data.total) * 100); displayStatus += ` (${percent}%)`; } showStatus(displayStatus, 'info'); } } catch (e) { console.warn('Error parsing pull stream line (non-fatal):', line, e); } } } if (pullErrorOccurred) break; } if (pullErrorOccurred) { throw new Error(pullErrorMessage); } else { showStatus(`Successfully pulled ${modelName}! Refreshing list...`, 'success'); els.pullModelName.value = ''; await loadModels(); } } catch(e) { console.error("Error in pullModel function catch block:", e); showStatus(`Error pulling ${modelName}: ${pullErrorMessage || e.message}`, 'error'); } finally { pullButton.disabled = false; pullButton.innerHTML = originalButtonHTML; } }
+
+     // --- bindEvents ---
+     function bindEvents() {
+        els.refresh.addEventListener('click', loadModels);
+        els.send.addEventListener('click', sendMessage);
+        els.input.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
+        els.input.addEventListener('keydown', () => setTimeout(() => autoGrowTextarea(els.input), 0));
+        els.temp.addEventListener('input', () => { els.tempVal.textContent = parseFloat(els.temp.value).toFixed(1); });
+
+        // Copy Button Listener
+        els.messages.addEventListener('click', async (event) => { const copyBtn = event.target.closest('.copy-btn'); if (!copyBtn) return; const messageElement = copyBtn.closest('.message.ai'); if (!messageElement) return; const textContentElement = messageElement.querySelector('.message-content .text-content'); const textToCopy = textContentElement ? textContentElement.textContent : ''; if (textToCopy) { try { await navigator.clipboard.writeText(textToCopy); copyBtn.innerHTML = '<i class="fa-solid fa-check"></i>'; copyBtn.classList.add('copied'); copyBtn.disabled = true; setTimeout(() => { copyBtn.innerHTML = '<i class="fa-regular fa-copy"></i>'; copyBtn.classList.remove('copied'); copyBtn.disabled = false; }, 1500); } catch (err) { console.error('Failed to copy: ', err); copyBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>'; setTimeout(() => { copyBtn.innerHTML = '<i class="fa-regular fa-copy"></i>'; }, 1500); } } });
+
+        // Modal Event Listeners
+        els.gettingStartedBtn.addEventListener('click', (e) => { e.preventDefault(); console.log("Getting started btn clicked"); populateGettingStarted(); openModal(els.gettingStartedModal); });
+        els.cliGuideBtn.addEventListener('click', (e) => { e.preventDefault(); console.log("CLI guide btn clicked"); populateCliGuide(); openModal(els.cliGuideModal); });
+        document.querySelectorAll('.help-modal').forEach(modal => { const closeBtn = modal.querySelector('.close-modal'); const overlay = modal.querySelector('.modal-overlay'); if(closeBtn) { closeBtn.addEventListener('click', () => closeModal(modal)); } if(overlay) { overlay.addEventListener('click', () => closeModal(modal)); } });
+
+        // Hide/Show Model Listeners
+        els.modelList.addEventListener('click', (event) => { const hideBtn = event.target.closest('.hide-model-btn'); if (hideBtn) { event.stopPropagation(); const modelNameToHide = hideBtn.dataset.modelHide; if (modelNameToHide && !state.hiddenModels.includes(modelNameToHide)) { state.hiddenModels.push(modelNameToHide); saveHiddenModels(); if(state.selected?.name === modelNameToHide) { state.selected = null; renderModelDetails(null); showInitialPlaceholder(); els.input.disabled = true; els.send.disabled = true; showStatus('Model hidden. Select another model.', 'info'); } renderModels(); } } });
+        els.showHiddenBtn.addEventListener('click', () => { if (state.hiddenModels.length > 0) { state.hiddenModels = []; saveHiddenModels(); renderModels(); showStatus('All hidden models restored.', 'info'); } });
+
+        // Pull Model Button Listener
+        els.pullModelBtn.addEventListener('click', () => { const modelName = els.pullModelName.value.trim(); pullModel(modelName); });
+        els.pullModelName.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); pullModel(els.pullModelName.value.trim()); } });
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', initialize);
+  </script>
+</body>
+</html>
