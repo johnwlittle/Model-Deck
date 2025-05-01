@@ -38,7 +38,6 @@ My specific goals were to create a simple platform primarily for my own future p
 
 ## Screenshot
 
-*(Replace this line with an actual screenshot if desired)*
 ![MODEL DECK Screenshot](modeldeckss1.jpg)
 
 ## Getting Started
