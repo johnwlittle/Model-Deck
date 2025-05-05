@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Model Deck</title>
+<title>Model Deck</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><circle cx=%2750%27 cy=%2750%27 r=%2745%27 fill=%27%2300BFFF%27/><text x=%2750%27 y=%2755%27 fill=%27black%27 font-size=%2765%27 font-family=%27sans-serif%27 font-weight=%27bold%27 text-anchor=%27middle%27 dominant-baseline=%27central%27>M</text></svg>">
 
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -48,18 +49,8 @@ body { background: var(--bg-main); color: var(--text-primary); font-family: var(
 
 /* Title */
 .title-container { margin-bottom: 15px; }
-.sidebar h2 {
-    font-family: var(--ui-font); font-weight: 700;
-    font-size: 2.4rem; /* User preferred size */
-    text-align: left;
-    color: var(--text-secondary);
-    letter-spacing: 0.2px; /* User preferred spacing */
-    line-height: 1;
-    margin-bottom: 12px;
-    word-break: break-word;
-    padding: 0;
-}
-.sidebar h2 .h2-alt { color: var(--text-accent); font-weight: 700; } /* Color for DECK */
+.sidebar h2 { font-family: var(--ui-font); font-weight: 700; font-size: 2.4rem; text-align: left; color: var(--text-secondary); letter-spacing: 0.2px; line-height: 1; margin-bottom: 12px; word-break: break-word; padding: 0; }
+.sidebar h2 .h2-alt { color: var(--text-accent); font-weight: 700; }
 
 /* Blinking Status Lights */
 .status-lights { display: flex; justify-content: space-between; height: 6px; width: 100%; }
@@ -69,6 +60,7 @@ body { background: var(--bg-main); color: var(--text-primary); font-family: var(
 .status { font-size: 0.8rem; margin-top: 15px; margin-bottom: 1.5rem; color: var(--text-secondary); text-align: left; min-height: 2.4em; text-transform: uppercase; letter-spacing: 0.5px; word-break: break-word; }
 .status.error { color: var(--error-color); font-weight: bold; }
 .status.success { color: var(--success-color); font-weight: bold; }
+.status.warning { color: #FFA500; font-weight: bold; }
 
 /* Settings, System Prompt */
 .settings, .system-prompt-setting { padding: 1rem 0; margin-bottom: 1rem; border-top: 1px solid var(--border-color); }
@@ -83,11 +75,53 @@ body { background: var(--bg-main); color: var(--text-primary); font-family: var(
 #systemPrompt { width: 100%; min-height: 80px; font-family: var(--mono-font); font-size: 0.85rem; line-height: 1.5; padding: 8px 10px; background: var(--bg-input); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: var(--radius); resize: vertical; }
 #systemPrompt:focus { outline: none; border-color: var(--light-color); background: #28282e; }
 
-/* Model Details Bar */
-#modelDetails { display: flex; flex-wrap: wrap; justify-content: flex-start; gap: 10px 20px; padding: 8px 25px; border-bottom: 1px solid var(--border-color); background: var(--bg-panel); font-size: 0.75rem; color: var(--text-secondary); min-height: auto; }
+/* Model Details Bar & Qwen Flags Bar */
+#modelDetails, #qwenFlagsBar { display: flex; flex-wrap: wrap; justify-content: flex-start; gap: 10px 20px; padding: 8px 25px; border-bottom: 1px solid var(--border-color); background: var(--bg-panel); font-size: 0.75rem; color: var(--text-secondary); min-height: auto; align-items: center;}
 #modelDetails .detail-item { display: flex; gap: 5px; white-space: nowrap; }
 #modelDetails .detail-item span:first-child { opacity: 0.7; color: var(--text-secondary); }
 #modelDetails .detail-item span:last-child { color: var(--text-primary); font-family: var(--mono-font); font-weight: 600; }
+
+/* Qwen Flags Bar Specific Styles */
+#qwenFlagsBar {
+    padding: 6px 25px;
+    gap: 15px 25px;
+}
+.flag-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.flag-name {
+    font-family: var(--mono-font);
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+}
+.flag-toggle {
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    font-size: 0.7rem;
+    font-weight: 600;
+    font-family: var(--ui-font);
+    padding: 3px 8px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+    min-width: 40px;
+    text-align: center;
+}
+.flag-toggle:hover {
+    background: #28282e;
+    border-color: #555;
+    color: var(--text-primary);
+}
+.flag-toggle.active { /* Style for ON state */
+    background-color: var(--light-dim-color);
+    border-color: var(--light-color);
+    color: var(--light-color);
+    box-shadow: 0 0 3px var(--light-dim-color);
+}
+
 
 /* Pull Model Area */
 .pull-model-container { padding: 1rem 0; margin-bottom: 0.5rem; border-top: 1px solid var(--border-color); display: flex; gap: 10px; align-items: center; }
@@ -132,7 +166,6 @@ body { background: var(--bg-main); color: var(--text-primary); font-family: var(
 #refreshModels { background: var(--bg-input); border: 1px solid var(--border-color); color: var(--text-secondary); padding: 10px 15px; font-size: 0.8rem; font-family: var(--ui-font); font-weight: 600; text-transform: uppercase; cursor: pointer; transition: background 0.2s, color 0.2s, border-color 0.2s; border-radius: var(--radius); text-align: center; letter-spacing: 1px; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px; }
 #refreshModels i { font-size: 0.9em; }
 #refreshModels:hover { background: #28282e; color: var(--text-primary); border-color: #444; }
-/* Library link style moved */
 .attribution { margin-top: 10px; text-align: center; font-size: 0.75rem; color: var(--text-secondary); display: flex; align-items: center; justify-content: center; gap: 5px; }
 .attribution .link-icon { font-size: 0.8em; opacity: 0.7; display: inline-block; }
 .attribution a { color: var(--link-color); text-decoration: none; transition: color 0.2s; }
@@ -140,10 +173,8 @@ body { background: var(--bg-main); color: var(--text-primary); font-family: var(
 
 /* Chat Area / Input / Modals etc. */
 .chat-container { flex: 1; display: flex; flex-direction: column; background: var(--bg-chat); overflow: hidden; }
-#modelDetails { display: flex; flex-wrap: wrap; justify-content: flex-start; gap: 10px 20px; padding: 8px 25px; border-bottom: 1px solid var(--border-color); background: var(--bg-panel); font-size: 0.75rem; color: var(--text-secondary); min-height: auto; }
-#modelDetails .detail-item { display: flex; gap: 5px; white-space: nowrap; }
-#modelDetails .detail-item span:first-child { opacity: 0.7; color: var(--text-secondary); }
-#modelDetails .detail-item span:last-child { color: var(--text-primary); font-family: var(--mono-font); font-weight: 600; }
+/* #modelDetails styling is above */
+/* #qwenFlagsBar styling is above */
 .messages { flex: 1; padding: 30px 25px; overflow-y: auto; display: flex; flex-direction: column; }
 .initial-placeholder { flex-grow: 1; display: flex; align-items: center; justify-content: center; text-align: center; color: var(--text-accent); font-family: var(--ui-font); font-size: 5vw; font-weight: 700; line-height: 1.1; opacity: 0.15; pointer-events: none; }
 .message { display: flex; margin-bottom: 1.5rem; max-width: 80%; flex-shrink: 0; position: relative; }
@@ -262,7 +293,8 @@ input[type="range"]:focus::-moz-range-thumb { box-shadow: 0 0 5px var(--light-co
       <div id="modelDetails" class="model-details">
          <span>Select a model to see details.</span>
       </div>
-
+       <div id="qwenFlagsBar" style="display: none;">
+           </div>
       <div class="messages" id="messages">
         </div>
       <div class="message-input-container">
@@ -281,7 +313,7 @@ input[type="range"]:focus::-moz-range-thumb { box-shadow: 0 0 5px var(--light-co
         <div class="chat-input-section">
             <span id="loading" class="loading"></span>
             <textarea id="messageInput" placeholder="Type your message…" disabled></textarea>
-            <button id="sendMessage" disabled>
+             <button id="sendMessage" disabled>
                 <i class="fa-solid fa-paper-plane"></i>
             </button>
         </div>
@@ -289,9 +321,9 @@ input[type="range"]:focus::-moz-range-thumb { box-shadow: 0 0 5px var(--light-co
   <div id="cliGuideModal" class="help-modal"> <div class="modal-overlay"></div> <div class="modal-dialog"> <button class="close-modal" title="Close"><i class="fa-solid fa-xmark"></i></button> <div class="modal-content"></div> </div> </div>
 
   <script>
-    // Removed Prism Config
-
     const API_BASE = 'http://localhost:11434';
+    const QWEN_FLAGS = ['/thinking', '/json', '/list', '/code', '/summary', '/reasoning', '/strict'];
+
     const els = {
       modelList: document.getElementById('modelList'),
       status:    document.getElementById('status'),
@@ -305,15 +337,33 @@ input[type="range"]:focus::-moz-range-thumb { box-shadow: 0 0 5px var(--light-co
       maxTokens: document.getElementById('maxTokens'),
       systemPrompt: document.getElementById('systemPrompt'),
       modelDetails: document.getElementById('modelDetails'),
+      qwenFlagsBar: document.getElementById('qwenFlagsBar'),
       gettingStartedBtn: document.getElementById('gettingStartedBtn'),
       cliGuideBtn: document.getElementById('cliGuideBtn'),
       gettingStartedModal: document.getElementById('gettingStartedModal'),
       cliGuideModal: document.getElementById('cliGuideModal'),
       showHiddenBtn: document.getElementById('showHiddenBtn'),
       pullModelName: document.getElementById('pullModelName'),
-      pullModelBtn: document.getElementById('pullModelBtn')
+      pullModelBtn: document.getElementById('pullModelBtn'),
     };
-    let state = { models: [], selected: null, history: [], hiddenModels: [] };
+
+    let state = {
+        models: [],
+        selected: null,
+        history: [],
+        hiddenModels: [],
+        qwenFlags: {}
+    };
+
+    // Initialize default flags state structure (all OFF)
+    function resetQwenFlagsState() {
+        state.qwenFlags = {};
+        QWEN_FLAGS.forEach(flag => {
+            state.qwenFlags[flag] = false; // All flags default to OFF in UI state
+        });
+         console.log("Qwen flags UI state reset to default (all false):", JSON.stringify(state.qwenFlags));
+    }
+    resetQwenFlagsState(); // Initialize on script load
 
     // --- Utility Functions ---
     function escapeHtml(unsafe) { if (!unsafe) return ''; return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
@@ -325,7 +375,7 @@ input[type="range"]:focus::-moz-range-thumb { box-shadow: 0 0 5px var(--light-co
     function openModal(modalElement) { if (modalElement) { modalElement.classList.add('active'); } }
     function closeModal(modalElement) { if (modalElement) { modalElement.classList.remove('active'); } }
 
-    // --- Content Population Functions (Updated Getting Started) ---
+    // --- Content Population Functions ---
     function populateGettingStarted() {
          console.log("Populating Getting Started...");
          const content = `
@@ -333,7 +383,7 @@ input[type="range"]:focus::-moz-range-thumb { box-shadow: 0 0 5px var(--light-co
              <h4>Prerequisites:</h4>
              <ul>
                  <li><strong>Ollama Installed & Running:</strong> You need the Ollama application installed and running on your computer. Download it from <a href="https://ollama.com" target="_blank" rel="noopener noreferrer">ollama.com</a> and follow their installation instructions. Make sure the Ollama server is running (it usually starts automatically after installation).</li>
-                 <li><strong>Models Downloaded:</strong> You need at least one model downloaded through Ollama. Open your terminal or command prompt and run <code>ollama pull llama3</code> (or replace <code>llama3</code> with another model name like <code>mistral</code>, <code>gemma:2b</code>, etc.). You can also use the "Pull model:tag..." input in this app (bottom left).</li>
+                 <li><strong>Models Downloaded:</strong> You need at least one model downloaded through Ollama. Open your terminal or command prompt and run <code>ollama pull llama3</code> (or replace <code>llama3</code> with another model name like <code>mistral</code>, <code>gemma:2b</code>, etc.). You can also use the "Pull model:tag..." input in this app (bottom left). A Qwen3 model (e.g., <code>ollama pull qwen3:latest</code>) is required to use the Qwen Flags Bar.</li>
              </ul>
              <h4>How to Run This App:</h4>
               <ol>
@@ -354,6 +404,7 @@ input[type="range"]:focus::-moz-range-thumb { box-shadow: 0 0 5px var(--light-co
              <ul>
                 <li>Select a model from the list on the left.</li>
                 <li>View model details (if available) above the chat area.</li>
+                 <li>**Qwen3 Flags Bar:** If a model named 'qwen3...' is selected, a bar appears below the model details allowing you to toggle various command flags ON or OFF. All flags default to OFF. For the special '/thinking' flag: OFF sends '/no_think', ON sends '/think'. For other flags, only active (ON) flags are appended to your prompt. When '/no_think' is sent, the app also tries to hide an initial '<think>\\s*</think>' tag (including potential newlines) if the model sends one.</li>
                 <li>Adjust settings or add a system prompt in the sidebar.</li>
                 <li>Chat using the input box at the bottom right.</li>
                 <li>Pull new models using the input box at the bottom left.</li>
@@ -361,9 +412,9 @@ input[type="range"]:focus::-moz-range-thumb { box-shadow: 0 0 5px var(--light-co
              </ul>
          `;
          const contentArea = els.gettingStartedModal?.querySelector('.modal-content');
-         if (contentArea) { console.log("Setting Getting Started HTML"); contentArea.innerHTML = content; }
+         if (contentArea) { contentArea.innerHTML = content; }
          else { console.error("Getting Started modal content area not found"); }
-     }
+     } // Closes populateGettingStarted
      function populateCliGuide() {
          console.log("Populating CLI Guide...");
          const content = `
@@ -384,9 +435,9 @@ input[type="range"]:focus::-moz-range-thumb { box-shadow: 0 0 5px var(--light-co
              <p>For more details, check the <a href="https://github.com/ollama/ollama" target="_blank" rel="noopener noreferrer">official Ollama documentation</a> on GitHub.</p>
          `;
           const contentArea = els.cliGuideModal?.querySelector('.modal-content');
-         if (contentArea) { console.log("Setting CLI Guide HTML"); contentArea.innerHTML = content; }
+         if (contentArea) { contentArea.innerHTML = content; }
          else { console.error("CLI Guide modal content area not found"); }
-     }
+     } // Closes populateCliGuide
 
     // --- Render Model Details ---
     function renderModelDetails(model) { if (!els.modelDetails) return; els.modelDetails.innerHTML = ''; if (!model) { els.modelDetails.innerHTML = '<span>Select a model to see details.</span>'; els.modelDetails.style.padding = '8px 25px'; return; } const detailsToShow = {}; if (model.details?.family) detailsToShow['Family'] = model.details.family; if (model.details?.parameter_size) detailsToShow['Parameters'] = model.details.parameter_size; if (model.size) detailsToShow['Size'] = formatBytes(model.size); if (model.details?.quantization_level) detailsToShow['Quantization'] = model.details.quantization_level; if (Object.keys(detailsToShow).length === 0) { els.modelDetails.innerHTML = '<span>No specific details available.</span>'; els.modelDetails.style.padding = '8px 25px'; return; } for (const [label, value] of Object.entries(detailsToShow)) { const itemDiv = document.createElement('div'); itemDiv.className = 'detail-item'; const labelSpan = document.createElement('span'); labelSpan.textContent = `${label}:`; const valueSpan = document.createElement('span'); valueSpan.textContent = value; itemDiv.appendChild(labelSpan); itemDiv.appendChild(valueSpan); els.modelDetails.appendChild(itemDiv); } els.modelDetails.style.padding = '8px 25px'; }
@@ -394,54 +445,578 @@ input[type="range"]:focus::-moz-range-thumb { box-shadow: 0 0 5px var(--light-co
     function saveHiddenModels() { localStorage.setItem('hiddenModels', JSON.stringify(state.hiddenModels)); updateShowHiddenButton(); }
     function updateShowHiddenButton() { const count = state.hiddenModels.length; els.showHiddenBtn.textContent = `Show Hidden Models (${count})`; els.showHiddenBtn.disabled = count === 0; }
 
+    // --- Qwen Flags Bar UI ---
+    function populateQwenFlagsBar() {
+        if (!els.qwenFlagsBar) return;
+        els.qwenFlagsBar.innerHTML = '';
+        QWEN_FLAGS.forEach(flag => {
+            const flagItem = document.createElement('div');
+            flagItem.className = 'flag-item';
+
+            const flagNameSpan = document.createElement('span');
+            flagNameSpan.className = 'flag-name';
+            flagNameSpan.textContent = flag;
+            flagItem.appendChild(flagNameSpan);
+
+            const toggleBtn = document.createElement('button');
+            toggleBtn.className = 'flag-toggle';
+            toggleBtn.dataset.flag = flag;
+            // Use state.qwenFlags (reset in selectModel) to set initial appearance
+            toggleBtn.textContent = state.qwenFlags[flag] ? 'ON' : 'OFF';
+            if (state.qwenFlags[flag]) {
+                toggleBtn.classList.add('active');
+            } else {
+                 toggleBtn.classList.remove('active'); // Ensure it's off
+            }
+            toggleBtn.title = `Click to toggle ${flag}`;
+            flagItem.appendChild(toggleBtn);
+
+            els.qwenFlagsBar.appendChild(flagItem);
+        });
+    } // Closes populateQwenFlagsBar
+
     // --- Core App Logic ---
-    async function initialize() { loadHiddenModels(); showStatus('Connecting to API...', 'info'); showInitialPlaceholder(); renderModelDetails(null); els.input.disabled = true; els.send.disabled = true; try { let apiOk = false; try { const versionRes = await fetch(`${API_BASE}/api/version`); if (versionRes.ok) { apiOk = true; } else { const baseRes = await fetch(API_BASE); if (baseRes.ok) { apiOk = true; } } } catch (e) { apiOk = true; console.warn("Initial API check failed, proceeding...", e)} if (!apiOk) throw new Error('Cannot reach Ollama API'); showStatus('Loading models...', 'info'); await loadModels(); bindEvents(); els.input.addEventListener('input', () => autoGrowTextarea(els.input)); autoGrowTextarea(els.input); } catch (e) { showStatus(`Error: ${e.message}. Is Ollama running at ${API_BASE}?`, 'error'); els.modelList.innerHTML = `<p style="color: var(--error-color);">API connection failed.</p>`; showInitialPlaceholder(); renderModelDetails(null); } }
+    async function initialize() {
+        loadHiddenModels();
+        showStatus('Connecting to API...', 'info');
+        showInitialPlaceholder();
+        renderModelDetails(null);
+        els.input.disabled = true;
+        els.send.disabled = true;
+        try {
+             let apiOk = false;
+             try {
+                 console.log(`Checking API at ${API_BASE}/api/version...`);
+                 const versionRes = await fetch(`${API_BASE}/api/version`);
+                 if (versionRes.ok) {
+                     console.log("API version check successful.");
+                     apiOk = true;
+                 } else {
+                     console.warn(`/api/version failed (${versionRes.status}), checking base URL ${API_BASE}...`);
+                     const baseRes = await fetch(API_BASE);
+                     if (baseRes.ok) {
+                         console.log("API base URL check successful.");
+                         apiOk = true;
+                     } else {
+                         console.error(`API base URL check failed (${baseRes.status}).`);
+                     }
+                 }
+             } catch (e) {
+                 console.error("Initial API connectivity check threw an error:", e);
+             }
+
+             if (!apiOk) {
+                 throw new Error(`Cannot reach Ollama API at ${API_BASE}. Check if Ollama is running and accessible.`);
+             }
+
+             showStatus('Loading models...', 'info');
+             await loadModels();
+             bindEvents();
+             autoGrowTextarea(els.input);
+         } catch (e) {
+             showStatus(`Initialization Error: ${e.message}`, 'error');
+             els.modelList.innerHTML = `<p style="color: var(--error-color);">API connection or initialization failed.</p>`;
+             showInitialPlaceholder();
+             renderModelDetails(null);
+             els.input.disabled = true;
+             els.send.disabled = true;
+         }
+     } // Closes initialize
+
 
     // --- loadModels ---
-    async function loadModels() { console.log("Attempting to load models..."); const refreshButton = els.refresh; const originalButtonHTML = refreshButton.innerHTML; refreshButton.disabled = true; refreshButton.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Refreshing...`; els.modelList.innerHTML = '<p>Loading models…</p>'; showStatus('Fetching models...', 'info'); try { let models = [], ok = false; try { console.log(`Workspaceing from ${API_BASE}/api/tags`); const r = await fetch(`${API_BASE}/api/tags`); console.log(`/api/tags status: ${r.status}`); if (!r.ok) throw new Error(`/api/tags failed with status ${r.status}`); const j = await r.json(); console.log("Data from /api/tags:", j); models = (j.models || []); ok = true; } catch (tagsError) { console.warn("/api/tags failed:", tagsError.message, "Trying /v1/models..."); try { console.log(`Workspaceing from ${API_BASE}/v1/models`); const r = await fetch(`${API_BASE}/v1/models`); console.log(`/v1/models status: ${r.status}`); if (!r.ok) throw new Error(`/v1/models failed with status ${r.status}`); const j = await r.json(); console.log("Data from /v1/models:", j); models = (j.data || []).map(m => ({ name: m.id, modified_at: m.created ? new Date(m.created * 1000).toISOString() : new Date().toISOString(), size: 0, details: null })); ok = true; } catch (v1Error) { console.error("Both /api/tags and /v1/models failed:", tagsError, v1Error); throw new Error(`Failed to fetch models. /api/tags: ${tagsError.message}. /v1/models: ${v1Error.message}`); } } if (ok) { state.models = models.sort((a, b) => new Date(b.modified_at) - new Date(a.modified_at)); console.log("Processed models:", state.models); renderModels(); if (state.models.length > 0) { showStatus(`${state.models.length} model(s) loaded. Select one.`, 'info'); } else { showStatus(`No models found at ${API_BASE}. Use 'ollama pull'.`, 'warning'); } } else { throw new Error('Model fetching attempt failed without success.'); } if (!state.selected) { showInitialPlaceholder(); renderModelDetails(null);} else { const currentSelectedData = state.models.find(m => m.name === state.selected.name); renderModelDetails(currentSelectedData); removeInitialPlaceholder(); } } catch (e) { console.error("Final error in loadModels:", e); showStatus(`Error loading models: ${e.message}`, 'error'); els.modelList.innerHTML = `<p style="color: var(--error-color);">${e.message}. Check API endpoint and Ollama status.</p>`; showInitialPlaceholder(); renderModelDetails(null); } finally { refreshButton.disabled = false; refreshButton.innerHTML = originalButtonHTML; } }
+    async function loadModels() {
+        console.log("Attempting to load models...");
+        const refreshButton = els.refresh;
+        const originalButtonHTML = refreshButton.innerHTML;
+        refreshButton.disabled = true;
+        refreshButton.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Refreshing...`;
+        els.modelList.innerHTML = '<p>Loading models…</p>';
+        showStatus('Fetching models...', 'info');
+        try {
+            let models = [], ok = false;
+            try {
+                console.log(`Workspaceing from ${API_BASE}/api/tags`);
+                const r = await fetch(`${API_BASE}/api/tags`);
+                if (!r.ok) throw new Error(`/api/tags failed with status ${r.status}`);
+                const j = await r.json();
+                models = (j.models || []);
+                ok = true;
+            } catch (tagsError) {
+                console.warn("/api/tags failed:", tagsError.message, "Trying /v1/models...");
+                try {
+                    console.log(`Workspaceing from ${API_BASE}/v1/models`);
+                    const r = await fetch(`${API_BASE}/v1/models`);
+                    if (!r.ok) throw new Error(`/v1/models failed with status ${r.status}`);
+                    const j = await r.json();
+                    models = (j.data || []).map(m => ({ name: m.id, modified_at: m.created ? new Date(m.created * 1000).toISOString() : new Date().toISOString(), size: 0, details: null }));
+                    ok = true;
+                } catch (v1Error) {
+                    console.error("Both /api/tags and /v1/models failed:", tagsError, v1Error);
+                    throw new Error(`Failed to fetch models. /api/tags: ${tagsError.message}. /v1/models: ${v1Error.message}`);
+                }
+            }
+
+            if (ok) {
+                state.models = models.sort((a, b) => new Date(b.modified_at) - new Date(a.modified_at));
+                renderModels();
+                if (state.models.length > 0) {
+                    showStatus(`${state.models.length} model(s) loaded. Select one.`, 'info');
+                } else {
+                    showStatus(`No models found at ${API_BASE}. Use 'ollama pull'.`, 'warning');
+                }
+            } else {
+                throw new Error('Model fetching attempt failed without success.');
+            }
+
+            const previouslySelected = state.selected?.name;
+            state.selected = null;
+            if (previouslySelected && state.models.some(m => m.name === previouslySelected)) {
+                 console.log("Re-selecting previous model:", previouslySelected)
+                 selectModel(previouslySelected);
+            } else if (!state.selected) {
+                 showInitialPlaceholder();
+                 renderModelDetails(null);
+                 if(els.qwenFlagsBar) els.qwenFlagsBar.style.display = 'none';
+            }
+
+        } catch (e) {
+            console.error("Final error in loadModels:", e);
+            showStatus(`Error loading models: ${e.message}`, 'error');
+            els.modelList.innerHTML = `<p style="color: var(--error-color);">${e.message}. Check API endpoint and Ollama status.</p>`;
+            showInitialPlaceholder();
+            renderModelDetails(null);
+            if(els.qwenFlagsBar) els.qwenFlagsBar.style.display = 'none';
+        } finally {
+            refreshButton.disabled = false;
+            refreshButton.innerHTML = originalButtonHTML;
+        }
+    } // Closes loadModels
 
     // --- renderModels ---
-     function renderModels() { if (!els.modelList) return; const visibleModels = state.models.filter(m => !state.hiddenModels.includes(m.name)); if (!visibleModels || visibleModels.length === 0) { els.modelList.innerHTML = `<p>No visible models${state.models.length > 0 ? ' (all hidden)' : ''}.</p>`; updateShowHiddenButton(); return; } els.modelList.innerHTML = visibleModels.map(m => `<div class="model-card${state.selected?.name === m.name ? ' selected':''}" data-model="${m.name}"><h3>${escapeHtml(m.name)}</h3> <p>${new Date(m.modified_at).toLocaleDateString()}</p> <button class="hide-model-btn" title="Hide model" data-model-hide="${escapeHtml(m.name)}"><i class="fa-solid fa-eye-slash"></i></button></div>`).join(''); document.querySelectorAll('.model-card').forEach(card => { card.addEventListener('click', (e) => { if (!e.target.closest('.hide-model-btn')) { selectModel(card.dataset.model) } }); }); updateShowHiddenButton(); }
+     function renderModels() {
+         if (!els.modelList) return;
+         const visibleModels = state.models.filter(m => !state.hiddenModels.includes(m.name));
+         if (!visibleModels || visibleModels.length === 0) {
+             els.modelList.innerHTML = `<p>No visible models${state.models.length > 0 ? ' (all hidden)' : ''}.</p>`;
+             updateShowHiddenButton();
+             return;
+         }
+         els.modelList.innerHTML = visibleModels.map(m => `<div class="model-card${state.selected?.name === m.name ? ' selected':''}" data-model="${m.name}"><h3>${escapeHtml(m.name)}</h3> <p>${new Date(m.modified_at).toLocaleDateString()}</p> <button class="hide-model-btn" title="Hide model" data-model-hide="${escapeHtml(m.name)}"><i class="fa-solid fa-eye-slash"></i></button></div>`).join('');
+         document.querySelectorAll('.model-card').forEach(card => {
+             card.addEventListener('click', (e) => {
+                 if (!e.target.closest('.hide-model-btn')) {
+                     selectModel(card.dataset.model);
+                 }
+             });
+         });
+         updateShowHiddenButton();
+     } // Closes renderModels
 
-     // --- selectModel ---
-     function selectModel(name) { removeInitialPlaceholder(); state.selected = state.models.find(m => m.name === name) || null; state.history = []; renderModels(); renderModelDetails(state.selected); els.messages.innerHTML = ''; const aiMsgDiv = addMessage('ai', `Ready with ${name}.`); addCopyButton(aiMsgDiv); els.input.disabled = false; els.send.disabled = false; els.input.focus(); autoGrowTextarea(els.input); showStatus(`Selected: ${name}`, 'info'); }
+    // --- selectModel (Updated for Qwen Flags Bar) ---
+    function selectModel(name) {
+        removeInitialPlaceholder();
+        state.selected = state.models.find(m => m.name === name) || null;
+        state.history = [];
+        renderModels();
+        renderModelDetails(state.selected);
+        els.messages.innerHTML = '';
 
-     // --- sendMessage ---
-     async function sendMessage() { const text = els.input.value.trim(); const systemPrompt = els.systemPrompt.value.trim(); if (!text || !state.selected) { if (!state.selected) showStatus('Please select a model first.', 'error'); return; } removeInitialPlaceholder(); const userMsgDiv = addMessage('user', text); state.history.push({ role:'user', content:text }); els.input.value = ''; autoGrowTextarea(els.input); let messagesToSend = []; if (systemPrompt) { messagesToSend.push({ role: 'system', content: systemPrompt }); } messagesToSend = messagesToSend.concat(state.history); els.input.disabled = els.send.disabled = true; els.loading.style.display = 'block'; let aiMsgElement = null; let streamingIndicator = null; let messageContentElement = null; let fullResponse = ''; try { const opts = { model: state.selected.name, messages: messagesToSend, stream: true, options: { temperature: parseFloat(els.temp.value), num_predict: parseInt(els.maxTokens.value, 10) || 1024 }}; const apiEndpoint = `${API_BASE}/api/chat`; const resp = await fetch(apiEndpoint, { method:'POST', headers:{ 'Content-Type':'application/json' }, body:JSON.stringify(opts) }); if (!resp.ok || !resp.body) { let errorMsg = `API error ${resp.status}`; try { const errorJson = await resp.json(); errorMsg += `: ${errorJson.error || resp.statusText}`; } catch {} throw new Error(errorMsg); } const reader = resp.body.getReader(); const decoder = new TextDecoder(); aiMsgElement = addMessage('ai', ''); messageContentElement = aiMsgElement.querySelector('.message-content'); const textContentElement = messageContentElement.querySelector('.text-content'); streamingIndicator = messageContentElement.querySelector('.streaming-indicator'); if (streamingIndicator) streamingIndicator.classList.add('visible'); fullResponse = ''; let done = false; while (!done) { const { value, done: streamDone } = await reader.read(); done = streamDone; if (value) { const chunk = decoder.decode(value, { stream: true }); const lines = chunk.split('\n').filter(line => line.trim() !== ''); for (const line of lines) { try { const data = JSON.parse(line); const delta = data.message?.content ?? data.response ?? ''; if (delta) { fullResponse += delta; textContentElement.appendChild(document.createTextNode(delta)); els.messages.scrollTop = els.messages.scrollHeight; } if (data.done) { done = true; } } catch (e) { console.error('Error parsing stream chunk:', line, e); } } } } if (fullResponse) { state.history.push({ role:'assistant', content: fullResponse }); } if (aiMsgElement) { addCopyButton(aiMsgElement); } } catch(e) { if (aiMsgElement) { const textContentElement = aiMsgElement.querySelector('.message-content .text-content'); textContentElement.appendChild(document.createTextNode(`\n\nError: ${e.message}`)); } else { addMessage('ai', `Error: ${e.message}`); } showStatus(`Error: ${e.message}`, 'error'); } finally { els.loading.style.display = 'none'; if (streamingIndicator) streamingIndicator.classList.remove('visible'); if (aiMsgElement && !aiMsgElement.querySelector('.copy-btn')) { addCopyButton(aiMsgElement); } if (state.selected) { els.input.disabled = els.send.disabled = false; els.input.focus(); autoGrowTextarea(els.input); } else { els.input.disabled = els.send.disabled = true; } } }
+        const isQwen3Model = state.selected && state.selected.name.toLowerCase().includes('qwen3');
+
+        if (els.qwenFlagsBar) {
+            if (isQwen3Model) {
+                resetQwenFlagsState(); // Reset state to defaults (all false)
+                populateQwenFlagsBar(); // Create/update buttons based on reset state
+                els.qwenFlagsBar.style.display = 'flex';
+                console.log("Qwen3 model selected, showing flags bar (all flags OFF by default).");
+            } else {
+                els.qwenFlagsBar.style.display = 'none';
+                console.log("Non-Qwen3 model selected, hiding flags bar.");
+            }
+        }
+
+        if (state.selected) {
+            const readyMessage = `Ready with ${name}. ${isQwen3Model ? 'Qwen flags available.' : ''}`;
+            const aiMsgDiv = addMessage('ai', readyMessage);
+            addCopyButton(aiMsgDiv);
+            els.input.disabled = false;
+            els.send.disabled = false;
+            els.input.focus();
+            autoGrowTextarea(els.input);
+            showStatus(`Selected: ${name}`, 'info');
+        } else {
+            showInitialPlaceholder();
+            renderModelDetails(null);
+            els.input.disabled = true;
+            els.send.disabled = true;
+            if (els.qwenFlagsBar) els.qwenFlagsBar.style.display = 'none';
+            showStatus('No model selected.', 'warning');
+        }
+    } // Closes selectModel
+
+    // --- sendMessage (Handles /no_think default & filtering) ---
+    async function sendMessage() {
+        let text = els.input.value.trim();
+        const systemPrompt = els.systemPrompt.value.trim();
+
+        if (!text || !state.selected) {
+            if (!state.selected) showStatus('Please select a model first.', 'error');
+            return;
+        }
+
+        removeInitialPlaceholder();
+
+        // --- Qwen Flags Appending Logic ---
+        const isQwen3Model = state.selected && state.selected.name.toLowerCase().includes('qwen3');
+        let flagsToAppend = '';
+        let sendNoThink = false; // Track if /no_think should be sent
+
+        if (isQwen3Model) {
+            QWEN_FLAGS.forEach(flag => {
+                if (flag === '/thinking') {
+                    // Special logic: If UI toggle is OFF (state is false), send /no_think
+                    // If UI toggle is ON (state is true), send /think
+                    if (state.qwenFlags[flag]) {
+                        flagsToAppend += ` /think`;
+                    } else {
+                        flagsToAppend += ` /no_think`;
+                        sendNoThink = true; // Mark that /no_think was sent for filtering
+                    }
+                } else {
+                    // Other flags: only append if UI toggle is ON (state is true)
+                    if (state.qwenFlags[flag]) {
+                        flagsToAppend += ` ${flag}`;
+                    }
+                }
+            });
+
+            if (flagsToAppend) {
+                text += flagsToAppend;
+                console.log(`Appended flags:${flagsToAppend}`);
+            }
+        }
+        // Determine if filtering is needed based on whether /no_think was just appended
+        const shouldFilterResponse = sendNoThink;
+        // Regex to find the tag pair with optional whitespace inside
+        const tagRegex = /^<think>\s*<\/think>/;
+        // --- End Qwen Flags Appending ---
+
+        const userMsgDiv = addMessage('user', text);
+        state.history.push({ role: 'user', content: text });
+        els.input.value = '';
+        autoGrowTextarea(els.input);
+
+        let messagesToSend = [];
+        if (systemPrompt) {
+            messagesToSend.push({ role: 'system', content: systemPrompt });
+        }
+        messagesToSend = messagesToSend.concat(state.history);
+
+        els.input.disabled = els.send.disabled = true;
+        if (els.qwenFlagsBar) {
+             els.qwenFlagsBar.querySelectorAll('.flag-toggle').forEach(btn => btn.disabled = true);
+        }
+        els.loading.style.display = 'block';
+
+        let aiMsgElement = null;
+        let streamingIndicator = null;
+        let fullResponse = ''; // Accumulates the raw response
+        let filterApplied = false; // Tracks if filtering has been done for display
+
+        try { // try fetch/stream
+             const opts = { model: state.selected.name, messages: messagesToSend, stream: true, options: { temperature: parseFloat(els.temp.value), num_predict: parseInt(els.maxTokens.value, 10) || 1024 }};
+             const apiEndpoint = `${API_BASE}/api/chat`;
+             const resp = await fetch(apiEndpoint, { method:'POST', headers:{ 'Content-Type':'application/json' }, body:JSON.stringify(opts) });
+             if (!resp.ok || !resp.body) { let errorMsg = `API error ${resp.status}`; try { const errorJson = await resp.json(); errorMsg += `: ${errorJson.error || resp.statusText}`; } catch (e) {/*ignore json error*/} throw new Error(errorMsg); }
+
+             const reader = resp.body.getReader();
+             const decoder = new TextDecoder();
+             aiMsgElement = addMessage('ai', '');
+             const textContentElement = aiMsgElement.querySelector('.message-content .text-content');
+             streamingIndicator = aiMsgElement.querySelector('.message-content .streaming-indicator');
+             if (streamingIndicator) streamingIndicator.classList.add('visible');
+
+             let done = false;
+             while (!done) { // while loop for stream reading
+                 const { value, done: streamDone } = await reader.read();
+                 done = streamDone;
+                 if (value) { // if value exists
+                     const chunk = decoder.decode(value, { stream: true });
+                     const lines = chunk.split('\n').filter(line => line.trim() !== '');
+                     for (const line of lines) { // for loop over lines
+                         try { // try parsing line
+                             const data = JSON.parse(line);
+                             const delta = data.message?.content ?? data.response ?? '';
+
+                             if (delta) { // if delta content exists
+                                 fullResponse += delta; // Accumulate raw response *first*
+                                 let textToDisplay = delta; // Assume displaying the current chunk
+
+                                 // Check if we *should* filter and *haven't* successfully filtered yet
+                                 if (shouldFilterResponse && !filterApplied) {
+                                     const match = fullResponse.match(tagRegex);
+                                     if (match) {
+                                         // Found the complete tag pattern at the start!
+                                         const matchedPrefix = match[0];
+                                         const contentAfterTag = fullResponse.substring(matchedPrefix.length);
+
+                                         // Rewrite display
+                                         textContentElement.textContent = ''; // Clear previous parts
+                                         if (contentAfterTag) {
+                                             textContentElement.appendChild(document.createTextNode(contentAfterTag));
+                                         }
+                                         textToDisplay = ''; // Don't append original delta later
+
+                                         console.log(`Filtered pattern '${matchedPrefix.replace('\n', '\\n')}' prefix from display.`);
+                                         filterApplied = true; // Mark filtering as done for display
+                                     } else {
+                                         // Check if we might be *in the middle* of receiving the pattern
+                                         if (fullResponse.length < "<think>".length + "</think>".length &&
+                                             tagRegex.source.slice(1).startsWith(fullResponse.replace(/</g,'\\<'))) {
+                                                textToDisplay = ''; // Display nothing yet, wait
+                                         }
+                                         // If it doesn't match and isn't a likely partial start, display delta normally.
+                                     }
+                                 }
+
+                                 // Append textToDisplay if needed
+                                 if (textToDisplay) {
+                                     textContentElement.appendChild(document.createTextNode(textToDisplay));
+                                 }
+                                 els.messages.scrollTop = els.messages.scrollHeight;
+                             } // Closes if (delta)
+
+                             if (data.done || (data.message && data.message.content === '' && data.done)) {
+                                 done = true;
+                             }
+                         } catch (e) { console.error('Error parsing stream chunk:', line, e); }
+                     } // Closes for loop
+                 } // Closes if (value)
+             } // Closes while loop
+
+             // --- History Prefix Filtering (Using Regex) ---
+             let finalResponseForHistory = fullResponse;
+             if (shouldFilterResponse) { // Check only if filtering was intended
+                  const historyMatch = fullResponse.match(tagRegex); // Use the same regex
+                  if (historyMatch) {
+                      finalResponseForHistory = fullResponse.substring(historyMatch[0].length); // Remove the matched prefix length
+                      console.log(`Filtered tag pattern '${historyMatch[0].replace('\n','\\n')}' prefix from history.`);
+                  }
+             }
+             // --- End History Filtering ---
+
+             // Only push non-empty history
+             if (finalResponseForHistory && finalResponseForHistory.trim() !== '') {
+                 state.history.push({ role:'assistant', content: finalResponseForHistory });
+             } else {
+                  console.log("Final response for history was empty or just the filtered tag.");
+             }
+             if (aiMsgElement) { addCopyButton(aiMsgElement); }
+
+        } catch(e) { // catch for fetch/stream errors
+             console.error("Error during sendMessage fetch/stream:", e);
+             if (aiMsgElement) {
+                 const textContentElement = aiMsgElement.querySelector('.message-content .text-content');
+                 if (!textContentElement.textContent?.trim()) {
+                    textContentElement.appendChild(document.createTextNode(`Error: ${e.message}`));
+                 } else {
+                     textContentElement.appendChild(document.createTextNode(`\n\n--- Error: ${e.message} ---`));
+                 }
+                 addCopyButton(aiMsgElement);
+             } else {
+                 addMessage('ai', `Error: ${e.message}`);
+             }
+             showStatus(`Error: ${e.message}`, 'error');
+        } finally { // finally for fetch/stream
+             els.loading.style.display = 'none';
+             if (streamingIndicator) streamingIndicator.classList.remove('visible');
+             if (state.selected) {
+                 els.input.disabled = false;
+                 els.send.disabled = false;
+                 if (els.qwenFlagsBar && els.qwenFlagsBar.style.display !== 'none') {
+                     els.qwenFlagsBar.querySelectorAll('.flag-toggle').forEach(btn => btn.disabled = false);
+                 }
+                 els.input.focus();
+                 autoGrowTextarea(els.input);
+             } else {
+                 els.input.disabled = true;
+                 els.send.disabled = true;
+                 if (els.qwenFlagsBar) {
+                      els.qwenFlagsBar.querySelectorAll('.flag-toggle').forEach(btn => btn.disabled = true);
+                 }
+             }
+        } // Closes finally
+    } // Closes sendMessage
+
 
     // --- addMessage ---
-    function addMessage(who, text) { removeInitialPlaceholder(); const msgDiv = document.createElement('div'); msgDiv.className = `message ${who}`; const contentDiv = document.createElement('div'); contentDiv.className = 'message-content'; const textSpan = document.createElement('span'); textSpan.className = 'text-content'; textSpan.appendChild(document.createTextNode(text)); contentDiv.appendChild(textSpan); if (who === 'ai') { const indicatorSpan = document.createElement('span'); indicatorSpan.className = 'streaming-indicator'; contentDiv.appendChild(indicatorSpan); } msgDiv.appendChild(contentDiv); els.messages.appendChild(msgDiv); els.messages.scrollTop = els.messages.scrollHeight; return msgDiv; }
+    function addMessage(who, text) { removeInitialPlaceholder(); const msgDiv = document.createElement('div'); msgDiv.className = `message ${who}`; const contentDiv = document.createElement('div'); contentDiv.className = 'message-content'; const textSpan = document.createElement('span'); textSpan.className = 'text-content'; if (text) { textSpan.appendChild(document.createTextNode(text)); } contentDiv.appendChild(textSpan); if (who === 'ai') { const indicatorSpan = document.createElement('span'); indicatorSpan.className = 'streaming-indicator'; contentDiv.appendChild(indicatorSpan); } msgDiv.appendChild(contentDiv); els.messages.appendChild(msgDiv); els.messages.scrollTop = els.messages.scrollHeight; return msgDiv; }
 
      // --- showStatus ---
      function showStatus(msg, type = 'info') { if (!els.status) return; els.status.textContent = msg; els.status.className = `status ${type}`; }
 
      // --- Pull Model Function ---
-     async function pullModel(modelName) { if (!modelName || !modelName.trim()) { showStatus('Please enter a model name to pull.', 'error'); return; } console.log(`Pull requested for: ${modelName}`); const pullButton = els.pullModelBtn; const originalButtonHTML = pullButton.innerHTML; pullButton.disabled = true; pullButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; showStatus(`Pulling ${modelName}...`, 'info'); let pullErrorOccurred = false; let pullErrorMessage = ''; try { const requestBody = JSON.stringify({ name: modelName, stream: true }); console.log(`Sending POST to ${API_BASE}/api/pull with body:`, requestBody); const response = await fetch(`${API_BASE}/api/pull`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: requestBody }); console.log(`Pull API response status: ${response.status}`); if (!response.ok || !response.body) { let errorMsg = `API error ${response.status}`; if (!response.ok) { try { const errorJson = await response.json(); errorMsg += `: ${errorJson.error || 'Unknown API error'}`; } catch (e) { errorMsg += `: ${response.statusText || 'Unknown API error'}`; } } throw new Error(errorMsg); } const reader = response.body.getReader(); const decoder = new TextDecoder(); let done = false; while (!done) { const { value, done: streamDone } = await reader.read(); done = streamDone; if (value) { const chunk = decoder.decode(value, { stream: true }); console.log("Pull stream chunk:", chunk); const lines = chunk.split('\n').filter(line => line.trim() !== ''); for (const line of lines) { try { const data = JSON.parse(line); console.log('Parsed pull status:', data); if (data.error) { pullErrorOccurred = true; pullErrorMessage = data.error; console.error("Error from pull stream:", pullErrorMessage); done = true; break; } if (data.status) { let displayStatus = data.status; if (data.digest && data.total && data.completed) { const percent = Math.round((data.completed / data.total) * 100); displayStatus += ` (${percent}%)`; } showStatus(displayStatus, 'info'); } } catch (e) { console.warn('Error parsing pull stream line (non-fatal):', line, e); } } } if (pullErrorOccurred) break; } if (pullErrorOccurred) { throw new Error(pullErrorMessage); } else { showStatus(`Successfully pulled ${modelName}! Refreshing list...`, 'success'); els.pullModelName.value = ''; await loadModels(); } } catch(e) { console.error("Error in pullModel function catch block:", e); showStatus(`Error pulling ${modelName}: ${pullErrorMessage || e.message}`, 'error'); } finally { pullButton.disabled = false; pullButton.innerHTML = originalButtonHTML; } }
+     async function pullModel(modelName) {
+         if (!modelName || !modelName.trim()) { showStatus('Please enter a model name to pull.', 'error'); return; }
+         console.log(`Pull requested for: ${modelName}`);
+         const pullButton = els.pullModelBtn;
+         const originalButtonHTML = pullButton.innerHTML;
+         pullButton.disabled = true;
+         pullButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+         showStatus(`Pulling ${modelName}...`, 'info');
+         let pullErrorOccurred = false;
+         let pullErrorMessage = '';
+         try {
+             const requestBody = JSON.stringify({ name: modelName, stream: true });
+             const response = await fetch(`${API_BASE}/api/pull`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: requestBody });
+             if (!response.ok || !response.body) { let errorMsg = `API error ${response.status}`; if (!response.ok) { try { const errorJson = await response.json(); errorMsg += `: ${errorJson.error || 'Unknown API error'}`; } catch (e) { errorMsg += `: ${response.statusText || 'Unknown API error'}`; } } throw new Error(errorMsg); }
 
-     // --- bindEvents ---
+             const reader = response.body.getReader();
+             const decoder = new TextDecoder();
+             let done = false;
+             while (!done) {
+                 const { value, done: streamDone } = await reader.read();
+                 done = streamDone;
+                 if (value) {
+                     const chunk = decoder.decode(value, { stream: true });
+                     const lines = chunk.split('\n').filter(line => line.trim() !== '');
+                     for (const line of lines) {
+                         try {
+                             const data = JSON.parse(line);
+                             if (data.error) { pullErrorOccurred = true; pullErrorMessage = data.error; console.error("Error from pull stream:", pullErrorMessage); done = true; break; }
+                             if (data.status) { let displayStatus = data.status; if (data.digest && data.total && data.completed) { const percent = Math.round((data.completed / data.total) * 100); displayStatus += ` (${percent}%)`; } showStatus(displayStatus, 'info'); }
+                         } catch (e) { console.warn('Error parsing pull stream line (non-fatal):', line, e); }
+                     }
+                 }
+                 if (pullErrorOccurred) break;
+             }
+
+             if (pullErrorOccurred) {
+                 throw new Error(pullErrorMessage);
+             } else {
+                 showStatus(`Successfully pulled ${modelName}! Refreshing list...`, 'success');
+                 els.pullModelName.value = '';
+                 await loadModels();
+             }
+         } catch(e) {
+             console.error("Error in pullModel function catch block:", e);
+             showStatus(`Error pulling ${modelName}: ${pullErrorMessage || e.message}`, 'error');
+         } finally {
+             pullButton.disabled = false;
+             pullButton.innerHTML = originalButtonHTML;
+         }
+     } // Closes pullModel
+
+     // --- bindEvents (Handles Qwen Flags Bar) ---
      function bindEvents() {
         els.refresh.addEventListener('click', loadModels);
         els.send.addEventListener('click', sendMessage);
         els.input.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
+        els.input.addEventListener('input', () => autoGrowTextarea(els.input));
         els.input.addEventListener('keydown', () => setTimeout(() => autoGrowTextarea(els.input), 0));
         els.temp.addEventListener('input', () => { els.tempVal.textContent = parseFloat(els.temp.value).toFixed(1); });
 
         // Copy Button Listener
-        els.messages.addEventListener('click', async (event) => { const copyBtn = event.target.closest('.copy-btn'); if (!copyBtn) return; const messageElement = copyBtn.closest('.message.ai'); if (!messageElement) return; const textContentElement = messageElement.querySelector('.message-content .text-content'); const textToCopy = textContentElement ? textContentElement.textContent : ''; if (textToCopy) { try { await navigator.clipboard.writeText(textToCopy); copyBtn.innerHTML = '<i class="fa-solid fa-check"></i>'; copyBtn.classList.add('copied'); copyBtn.disabled = true; setTimeout(() => { copyBtn.innerHTML = '<i class="fa-regular fa-copy"></i>'; copyBtn.classList.remove('copied'); copyBtn.disabled = false; }, 1500); } catch (err) { console.error('Failed to copy: ', err); copyBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>'; setTimeout(() => { copyBtn.innerHTML = '<i class="fa-regular fa-copy"></i>'; }, 1500); } } });
+        els.messages.addEventListener('click', async (event) => {
+             const copyBtn = event.target.closest('.copy-btn');
+             if (!copyBtn) return;
+             const messageElement = copyBtn.closest('.message.ai');
+             if (!messageElement) return;
+             const textContentElement = messageElement.querySelector('.message-content .text-content');
+             const textToCopy = textContentElement ? textContentElement.textContent : '';
+             if (textToCopy) {
+                 try {
+                     await navigator.clipboard.writeText(textToCopy);
+                     copyBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
+                     copyBtn.classList.add('copied');
+                     copyBtn.disabled = true;
+                     setTimeout(() => {
+                         copyBtn.innerHTML = '<i class="fa-regular fa-copy"></i>';
+                         copyBtn.classList.remove('copied');
+                         copyBtn.disabled = false;
+                     }, 1500);
+                 } catch (err) {
+                     console.error('Failed to copy: ', err);
+                     copyBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+                     setTimeout(() => { copyBtn.innerHTML = '<i class="fa-regular fa-copy"></i>'; }, 1500);
+                 }
+             }
+        });
 
         // Modal Event Listeners
-        els.gettingStartedBtn.addEventListener('click', (e) => { e.preventDefault(); console.log("Getting started btn clicked"); populateGettingStarted(); openModal(els.gettingStartedModal); });
-        els.cliGuideBtn.addEventListener('click', (e) => { e.preventDefault(); console.log("CLI guide btn clicked"); populateCliGuide(); openModal(els.cliGuideModal); });
-        document.querySelectorAll('.help-modal').forEach(modal => { const closeBtn = modal.querySelector('.close-modal'); const overlay = modal.querySelector('.modal-overlay'); if(closeBtn) { closeBtn.addEventListener('click', () => closeModal(modal)); } if(overlay) { overlay.addEventListener('click', () => closeModal(modal)); } });
+        els.gettingStartedBtn.addEventListener('click', (e) => { e.preventDefault(); populateGettingStarted(); openModal(els.gettingStartedModal); });
+        els.cliGuideBtn.addEventListener('click', (e) => { e.preventDefault(); populateCliGuide(); openModal(els.cliGuideModal); });
+        document.querySelectorAll('.help-modal').forEach(modal => {
+            const closeBtn = modal.querySelector('.close-modal');
+            const overlay = modal.querySelector('.modal-overlay');
+            if(closeBtn) { closeBtn.addEventListener('click', () => closeModal(modal)); }
+            if(overlay) { overlay.addEventListener('click', () => closeModal(modal)); }
+        });
 
         // Hide/Show Model Listeners
-        els.modelList.addEventListener('click', (event) => { const hideBtn = event.target.closest('.hide-model-btn'); if (hideBtn) { event.stopPropagation(); const modelNameToHide = hideBtn.dataset.modelHide; if (modelNameToHide && !state.hiddenModels.includes(modelNameToHide)) { state.hiddenModels.push(modelNameToHide); saveHiddenModels(); if(state.selected?.name === modelNameToHide) { state.selected = null; renderModelDetails(null); showInitialPlaceholder(); els.input.disabled = true; els.send.disabled = true; showStatus('Model hidden. Select another model.', 'info'); } renderModels(); } } });
-        els.showHiddenBtn.addEventListener('click', () => { if (state.hiddenModels.length > 0) { state.hiddenModels = []; saveHiddenModels(); renderModels(); showStatus('All hidden models restored.', 'info'); } });
+        els.modelList.addEventListener('click', (event) => {
+            const hideBtn = event.target.closest('.hide-model-btn');
+            if (hideBtn) {
+                event.stopPropagation();
+                const modelNameToHide = hideBtn.dataset.modelHide;
+                if (modelNameToHide && !state.hiddenModels.includes(modelNameToHide)) {
+                    state.hiddenModels.push(modelNameToHide);
+                    saveHiddenModels();
+                    if(state.selected?.name === modelNameToHide) {
+                        state.selected = null;
+                        renderModelDetails(null);
+                        showInitialPlaceholder();
+                        els.input.disabled = true;
+                        els.send.disabled = true;
+                        if (els.qwenFlagsBar) { // Hide flags bar if selected model hidden
+                            els.qwenFlagsBar.style.display = 'none';
+                        }
+                        showStatus('Model hidden. Select another model.', 'info');
+                    }
+                    renderModels();
+                }
+            }
+        });
+
+        els.showHiddenBtn.addEventListener('click', () => {
+            if (state.hiddenModels.length > 0) {
+                 state.hiddenModels = [];
+                 saveHiddenModels();
+                 renderModels();
+                 showStatus('All hidden models restored.', 'info');
+             }
+        });
 
         // Pull Model Button Listener
         els.pullModelBtn.addEventListener('click', () => { const modelName = els.pullModelName.value.trim(); pullModel(modelName); });
         els.pullModelName.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); pullModel(els.pullModelName.value.trim()); } });
-    }
+
+        // --- Listener for Qwen Flags Bar (Event Delegation) ---
+        if (els.qwenFlagsBar) {
+            els.qwenFlagsBar.addEventListener('click', (event) => {
+                const target = event.target;
+                if (target.classList.contains('flag-toggle')) {
+                    const flag = target.dataset.flag;
+                    if (flag && state.qwenFlags.hasOwnProperty(flag)) {
+                        state.qwenFlags[flag] = !state.qwenFlags[flag]; // Toggle state
+                        // Update appearance
+                        target.textContent = state.qwenFlags[flag] ? 'ON' : 'OFF';
+                        if (state.qwenFlags[flag]) {
+                            target.classList.add('active');
+                        } else {
+                            target.classList.remove('active');
+                        }
+                        console.log(`Qwen flag ${flag} UI toggled to ${state.qwenFlags[flag] ? 'ON' : 'OFF'}`);
+                    } else {
+                        console.warn("Clicked flag toggle button without valid flag data:", target);
+                    }
+                }
+            });
+        }
+        // --- End of Qwen Flags Listener ---
+
+     } // Closing brace for bindEvents function definition
 
     // Initialize
     document.addEventListener('DOMContentLoaded', initialize);
