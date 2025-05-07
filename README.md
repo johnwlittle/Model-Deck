@@ -49,7 +49,7 @@ My specific goals were to create a simple platform primarily for my own future p
 
 ## Screenshot
 
-![MODEL DECK Screenshot](modeldeckss1.jpg)
+![MODEL DECK Screenshot](modeldeckss.jpg)
 
 ## Getting Started
 
