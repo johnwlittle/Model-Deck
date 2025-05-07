@@ -21,7 +21,7 @@
   --border-color:   #303035; --shadow-color:   rgba(0, 0, 0, 0.4);
   --light-color:    #00BFFF; --light-dim-color:rgba(0, 191, 255, 0.15);
   --error-color:    #FF5555; --link-color:     #888888; --link-hover-color:#BBBBBB;
-  --success-color:  #4CAF50;
+  --success-color:  #4CAF50; --warning-color:  #FFA500; --thinking-active-color: #FFD700;
 
   /* Fonts */
   --ui-font:   'Inter', sans-serif; --mono-font: 'IBM Plex Mono', monospace;
@@ -60,7 +60,7 @@ body { background: var(--bg-main); color: var(--text-primary); font-family: var(
 .status { font-size: 0.8rem; margin-top: 15px; margin-bottom: 1.5rem; color: var(--text-secondary); text-align: left; min-height: 2.4em; text-transform: uppercase; letter-spacing: 0.5px; word-break: break-word; }
 .status.error { color: var(--error-color); font-weight: bold; }
 .status.success { color: var(--success-color); font-weight: bold; }
-.status.warning { color: #FFA500; font-weight: bold; }
+.status.warning { color: var(--warning-color); font-weight: bold; }
 
 /* Settings, System Prompt */
 .settings, .system-prompt-setting { padding: 1rem 0; margin-bottom: 1rem; border-top: 1px solid var(--border-color); }
@@ -75,51 +75,133 @@ body { background: var(--bg-main); color: var(--text-primary); font-family: var(
 #systemPrompt { width: 100%; min-height: 80px; font-family: var(--mono-font); font-size: 0.85rem; line-height: 1.5; padding: 8px 10px; background: var(--bg-input); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: var(--radius); resize: vertical; }
 #systemPrompt:focus { outline: none; border-color: var(--light-color); background: #28282e; }
 
-/* Model Details Bar & Qwen Flags Bar */
-#modelDetails, #qwenFlagsBar { display: flex; flex-wrap: wrap; justify-content: flex-start; gap: 10px 20px; padding: 8px 25px; border-bottom: 1px solid var(--border-color); background: var(--bg-panel); font-size: 0.75rem; color: var(--text-secondary); min-height: auto; align-items: center;}
+/* Model Details Bar */
+#modelDetails { display: flex; flex-wrap: wrap; justify-content: flex-start; gap: 10px 20px; padding: 8px 25px; border-bottom: 1px solid var(--border-color); background: var(--bg-panel); font-size: 0.75rem; color: var(--text-secondary); min-height: auto; align-items: center;}
 #modelDetails .detail-item { display: flex; gap: 5px; white-space: nowrap; }
 #modelDetails .detail-item span:first-child { opacity: 0.7; color: var(--text-secondary); }
 #modelDetails .detail-item span:last-child { color: var(--text-primary); font-family: var(--mono-font); font-weight: 600; }
 
-/* Qwen Flags Bar Specific Styles */
-#qwenFlagsBar {
-    padding: 6px 25px;
-    gap: 15px 25px;
+
+/* Command Flags Bar */
+#commandFlagsBar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 15px; /* Reduced gap */
+    padding: 8px 25px;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--bg-panel);
 }
+
+/* Base style for all flag buttons */
+.flags-bar-button {
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    font-size: 0.75rem; /* Smaller font */
+    font-weight: 600;
+    font-family: var(--ui-font);
+    padding: 4px 10px; /* Smaller padding */
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s; /* Added opacity */
+    text-align: center;
+    white-space: nowrap;
+}
+.flags-bar-button:hover:not(:disabled) {
+    background: #28282e;
+    border-color: #555;
+    color: var(--text-primary);
+}
+
+/* Active state for ON/Enabled buttons */
+.flags-bar-button.active {
+    background-color: var(--light-dim-color);
+    border-color: var(--light-color);
+    color: var(--light-color);
+    box-shadow: 0 0 3px var(--light-dim-color);
+}
+.flags-bar-button.active:hover:not(:disabled) {
+    background-color: rgba(0, 191, 255, 0.3); /* Slightly brighter hover for active */
+}
+
+/* Style for Thinking button in THINK state */
+.flags-bar-button.think-active { /* Targeting base class + specific */
+    background-color: rgba(255, 215, 0, 0.15); /* Dim yellow */
+    border-color: var(--thinking-active-color);
+    color: var(--thinking-active-color);
+    box-shadow: 0 0 3px rgba(255, 215, 0, 0.15);
+}
+.flags-bar-button.think-active:hover:not(:disabled) {
+     background-color: rgba(255, 215, 0, 0.3);
+}
+
+
+/* Style for Thinking button in NO THINK state */
+.flags-bar-button.no-think-active { /* Targeting base class + specific */
+    background-color: rgba(255, 85, 85, 0.15); /* Dim red */
+    border-color: var(--error-color);
+    color: var(--error-color);
+    box-shadow: 0 0 3px rgba(255, 85, 85, 0.15);
+}
+.flags-bar-button.no-think-active:hover:not(:disabled) {
+    background-color: rgba(255, 85, 85, 0.3);
+}
+
+
+/* Standard Flag Toggle specific item container */
 .flag-item {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px; /* Reduced gap within item */
 }
 .flag-name {
     font-family: var(--mono-font);
     color: var(--text-secondary);
     font-size: 0.8rem;
+    transition: opacity 0.2s; /* Match button transition */
 }
-.flag-toggle {
+.flag-toggle { /* Specific class for standard ON/OFF toggles if needed */
+    min-width: 40px; /* Keep min-width for ON/OFF */
+}
+
+/* Custom Flag Input */
+#customFlagInput {
     background: var(--bg-input);
     border: 1px solid var(--border-color);
-    color: var(--text-secondary);
-    font-size: 0.7rem;
-    font-weight: 600;
-    font-family: var(--ui-font);
-    padding: 3px 8px;
-    border-radius: var(--radius);
-    cursor: pointer;
-    transition: background 0.2s, color 0.2s, border-color 0.2s;
-    min-width: 40px;
-    text-align: center;
-}
-.flag-toggle:hover {
-    background: #28282e;
-    border-color: #555;
     color: var(--text-primary);
+    font-family: var(--mono-font);
+    font-size: 0.8rem;
+    padding: 4px 8px; /* Match button height */
+    border-radius: var(--radius);
+    flex-grow: 1; /* Allow it to take remaining space */
+    min-width: 100px;
+    transition: border-color 0.2s, background-color 0.2s, opacity 0.2s; /* Added opacity */
 }
-.flag-toggle.active { /* Style for ON state */
-    background-color: var(--light-dim-color);
+#customFlagInput:focus {
+    outline: none;
     border-color: var(--light-color);
-    color: var(--light-color);
-    box-shadow: 0 0 3px var(--light-dim-color);
+    background: #28282e;
+}
+#customFlagInput::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.6;
+}
+
+
+/* Disabled state for flag controls */
+#commandFlagsBar .flags-bar-button:disabled,
+#commandFlagsBar #customFlagInput:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: var(--bg-input) !important; /* Override active styles */
+    color: var(--text-secondary) !important;
+    border-color: var(--border-color) !important;
+    box-shadow: none !important;
+}
+/* Dim the flag name span when controls are disabled */
+#commandFlagsBar[data-controls-disabled="true"] .flag-name {
+     opacity: 0.5;
 }
 
 
@@ -174,7 +256,7 @@ body { background: var(--bg-main); color: var(--text-primary); font-family: var(
 /* Chat Area / Input / Modals etc. */
 .chat-container { flex: 1; display: flex; flex-direction: column; background: var(--bg-chat); overflow: hidden; }
 /* #modelDetails styling is above */
-/* #qwenFlagsBar styling is above */
+/* #commandFlagsBar styling is above */
 .messages { flex: 1; padding: 30px 25px; overflow-y: auto; display: flex; flex-direction: column; }
 .initial-placeholder { flex-grow: 1; display: flex; align-items: center; justify-content: center; text-align: center; color: var(--text-accent); font-family: var(--ui-font); font-size: 5vw; font-weight: 700; line-height: 1.1; opacity: 0.15; pointer-events: none; }
 .message { display: flex; margin-bottom: 1.5rem; max-width: 80%; flex-shrink: 0; position: relative; }
@@ -293,7 +375,7 @@ input[type="range"]:focus::-moz-range-thumb { box-shadow: 0 0 5px var(--light-co
       <div id="modelDetails" class="model-details">
          <span>Select a model to see details.</span>
       </div>
-       <div id="qwenFlagsBar" style="display: none;">
+       <div id="commandFlagsBar" data-controls-disabled="true">
            </div>
       <div class="messages" id="messages">
         </div>
@@ -322,7 +404,15 @@ input[type="range"]:focus::-moz-range-thumb { box-shadow: 0 0 5px var(--light-co
 
   <script>
     const API_BASE = 'http://localhost:11434';
-    const QWEN_FLAGS = ['/thinking', '/json', '/list', '/code', '/summary', '/reasoning', '/strict'];
+    // Flags excluding /thinking, which is handled separately
+    const STANDARD_FLAGS = ['/json', '/list', '/code', '/summary', '/reasoning', '/strict'];
+    // Thinking toggle modes
+    const THINKING_MODES = [
+        { text: 'DEFAULT', command: null, className: '' },              // Mode 0
+        { text: 'THINK', command: '/think', className: 'think-active' }, // Mode 1
+        { text: 'NO THINK', command: '/no_think', className: 'no-think-active' } // Mode 2
+    ];
+
 
     const els = {
       modelList: document.getElementById('modelList'),
@@ -337,7 +427,7 @@ input[type="range"]:focus::-moz-range-thumb { box-shadow: 0 0 5px var(--light-co
       maxTokens: document.getElementById('maxTokens'),
       systemPrompt: document.getElementById('systemPrompt'),
       modelDetails: document.getElementById('modelDetails'),
-      qwenFlagsBar: document.getElementById('qwenFlagsBar'),
+      commandFlagsBar: document.getElementById('commandFlagsBar'), // Renamed for clarity
       gettingStartedBtn: document.getElementById('gettingStartedBtn'),
       cliGuideBtn: document.getElementById('cliGuideBtn'),
       gettingStartedModal: document.getElementById('gettingStartedModal'),
@@ -352,18 +442,10 @@ input[type="range"]:focus::-moz-range-thumb { box-shadow: 0 0 5px var(--light-co
         selected: null,
         history: [],
         hiddenModels: [],
-        qwenFlags: {}
+        flagsEnabled: false, // Master flag enable state
+        thinkingMode: 0,     // 0: DEFAULT, 1: THINK, 2: NO THINK
     };
 
-    // Initialize default flags state structure (all OFF)
-    function resetQwenFlagsState() {
-        state.qwenFlags = {};
-        QWEN_FLAGS.forEach(flag => {
-            state.qwenFlags[flag] = false; // All flags default to OFF in UI state
-        });
-         console.log("Qwen flags UI state reset to default (all false):", JSON.stringify(state.qwenFlags));
-    }
-    resetQwenFlagsState(); // Initialize on script load
 
     // --- Utility Functions ---
     function escapeHtml(unsafe) { if (!unsafe) return ''; return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
@@ -377,22 +459,23 @@ input[type="range"]:focus::-moz-range-thumb { box-shadow: 0 0 5px var(--light-co
 
     // --- Content Population Functions ---
     function populateGettingStarted() {
-         console.log("Populating Getting Started...");
+         console.log("Populating Getting Started..."); // Keep this log
+         // *** CORRECTED LINE BELOW: Escaped backticks around /think and /no_think ***
          const content = `
              <h3>Getting Started with Model Deck</h3> <p>This application allows you to chat with large language models running locally via Ollama.</p>
              <h4>Prerequisites:</h4>
              <ul>
                  <li><strong>Ollama Installed & Running:</strong> You need the Ollama application installed and running on your computer. Download it from <a href="https://ollama.com" target="_blank" rel="noopener noreferrer">ollama.com</a> and follow their installation instructions. Make sure the Ollama server is running (it usually starts automatically after installation).</li>
-                 <li><strong>Models Downloaded:</strong> You need at least one model downloaded through Ollama. Open your terminal or command prompt and run <code>ollama pull llama3</code> (or replace <code>llama3</code> with another model name like <code>mistral</code>, <code>gemma:2b</code>, etc.). You can also use the "Pull model:tag..." input in this app (bottom left). A Qwen3 model (e.g., <code>ollama pull qwen3:latest</code>) is required to use the Qwen Flags Bar.</li>
+                 <li><strong>Models Downloaded:</strong> You need at least one model downloaded through Ollama. Open your terminal or command prompt and run <code>ollama pull llama3</code> (or replace <code>llama3</code> with another model name like <code>mistral</code>, <code>gemma:2b</code>, etc.). You can also use the "Pull model:tag..." input in this app (bottom left).</li>
              </ul>
              <h4>How to Run This App:</h4>
               <ol>
-                 <li><strong>Save this File:</strong> Save this page as <code>model_deck.html</code>. </li>
+                 <li><strong>Save this File:</strong> Save this page as <code>index.html</code>. </li>
                  <li><strong>Need a Local Web Server (Recommended):</strong> Opening this file directly (<code>file:///...</code>) often fails due to browser security rules (CORS) that block requests to Ollama at <code>http://localhost:11434</code>. The most reliable way is to use a simple local server:</li>
                  <li><strong>Start Server (Pick One):</strong>
                     <ol type="a">
                       <li>Open your Terminal (macOS/Linux) or Command Prompt/PowerShell (Windows).</li>
-                      <li>Navigate to the directory where you saved <code>model_deck.html</code> using the <code>cd</code> command (e.g., <code>cd Downloads</code> or <code>cd path/to/folder</code>).</li>
+                      <li>Navigate to the directory where you saved <code>index.html</code> using the <code>cd</code> command (e.g., <code>cd Downloads</code> or <code>cd path/to/folder</code>).</li>
                       <li><strong>If Python 3 is installed:</strong> Run this command:<br><code>python3 -m http.server 8000</code><br>(On some systems, you might need to use <code>python</code> instead of <code>python3</code>). Note the port number (8000).</li>
                       <li><strong>If Node.js/npm is installed:</strong> Run this command:<br><code>npx serve .</code><br>(This usually serves on port 3000. If it asks to install 'serve', type 'y').</li>
                     </ol>
@@ -404,7 +487,15 @@ input[type="range"]:focus::-moz-range-thumb { box-shadow: 0 0 5px var(--light-co
              <ul>
                 <li>Select a model from the list on the left.</li>
                 <li>View model details (if available) above the chat area.</li>
-                 <li>**Qwen3 Flags Bar:** If a model named 'qwen3...' is selected, a bar appears below the model details allowing you to toggle various command flags ON or OFF. All flags default to OFF. For the special '/thinking' flag: OFF sends '/no_think', ON sends '/think'. For other flags, only active (ON) flags are appended to your prompt. When '/no_think' is sent, the app also tries to hide an initial '<think>\\s*</think>' tag (including potential newlines) if the model sends one.</li>
+                 <li><strong>Command Flags Bar:</strong> This bar is always visible below the model details.
+                     <ul>
+                         <li>The first button ("Enable"/"Enabled") activates/deactivates all flags for the current message. It defaults to "Enabled" for 'qwen' models, "Enable" otherwise, but you can toggle it manually.</li>
+                         <li>The "Thinking" button cycles: DEFAULT (model's choice), THINK (force \\\`/think\\\`), NO THINK (force \\\`/no_think\\\`). It defaults to NO THINK for 'qwen' models, DEFAULT otherwise.</li>
+                         <li>Other buttons toggle specific flags (like \\\`/json\\\`) ON/OFF.</li>
+                         <li>The input box lets you add a custom flag.</li>
+                         <li>Flags are only sent if the first button is "Enabled".</li>
+                     </ul>
+                 </li>
                 <li>Adjust settings or add a system prompt in the sidebar.</li>
                 <li>Chat using the input box at the bottom right.</li>
                 <li>Pull new models using the input box at the bottom left.</li>
@@ -412,11 +503,17 @@ input[type="range"]:focus::-moz-range-thumb { box-shadow: 0 0 5px var(--light-co
              </ul>
          `;
          const contentArea = els.gettingStartedModal?.querySelector('.modal-content');
-         if (contentArea) { contentArea.innerHTML = content; }
-         else { console.error("Getting Started modal content area not found"); }
+         if (contentArea) {
+             console.log("Found .modal-content for Getting Started."); // Keep log
+             contentArea.innerHTML = content;
+             console.log("Set innerHTML for Getting Started."); // Keep log
+         } else {
+             console.error("Getting Started modal content area (.modal-content) not found");
+         }
      } // Closes populateGettingStarted
+
      function populateCliGuide() {
-         console.log("Populating CLI Guide...");
+         console.log("Populating CLI Guide..."); // Keep this log
          const content = `
              <h3>Ollama CLI Quick Reference</h3>
              <p>Common commands for managing Ollama from your terminal:</p>
@@ -435,8 +532,13 @@ input[type="range"]:focus::-moz-range-thumb { box-shadow: 0 0 5px var(--light-co
              <p>For more details, check the <a href="https://github.com/ollama/ollama" target="_blank" rel="noopener noreferrer">official Ollama documentation</a> on GitHub.</p>
          `;
           const contentArea = els.cliGuideModal?.querySelector('.modal-content');
-         if (contentArea) { contentArea.innerHTML = content; }
-         else { console.error("CLI Guide modal content area not found"); }
+         if (contentArea) {
+             console.log("Found .modal-content for CLI Guide."); // Keep log
+             contentArea.innerHTML = content;
+             console.log("Set innerHTML for CLI Guide."); // Keep log
+         } else {
+             console.error("CLI Guide modal content area (.modal-content) not found");
+         }
      } // Closes populateCliGuide
 
     // --- Render Model Details ---
@@ -445,39 +547,95 @@ input[type="range"]:focus::-moz-range-thumb { box-shadow: 0 0 5px var(--light-co
     function saveHiddenModels() { localStorage.setItem('hiddenModels', JSON.stringify(state.hiddenModels)); updateShowHiddenButton(); }
     function updateShowHiddenButton() { const count = state.hiddenModels.length; els.showHiddenBtn.textContent = `Show Hidden Models (${count})`; els.showHiddenBtn.disabled = count === 0; }
 
-    // --- Qwen Flags Bar UI ---
-    function populateQwenFlagsBar() {
-        if (!els.qwenFlagsBar) return;
-        els.qwenFlagsBar.innerHTML = '';
-        QWEN_FLAGS.forEach(flag => {
+    // --- Command Flags Bar UI ---
+
+    // *** NEW Refactored Function ***
+    function updateThinkingButtonUI(modeIndex) {
+        const thinkingBtn = els.commandFlagsBar?.querySelector('#thinkingToggleBtn');
+        if (!thinkingBtn) return; // Safety check
+
+        // Ensure modeIndex is valid
+        modeIndex = (modeIndex >= 0 && modeIndex < THINKING_MODES.length) ? modeIndex : 0;
+        const mode = THINKING_MODES[modeIndex];
+
+        thinkingBtn.textContent = mode.text;
+        // Reset classes first to remove previous mode's class
+        thinkingBtn.className = 'flags-bar-button';
+        if (mode.className) {
+            thinkingBtn.classList.add(mode.className);
+        }
+    } // Closes updateThinkingButtonUI
+
+    function populateCommandFlagsBar() {
+        if (!els.commandFlagsBar) return;
+        els.commandFlagsBar.innerHTML = ''; // Clear existing content
+
+        // 1. Master Enable Button
+        const enableBtn = document.createElement('button');
+        enableBtn.id = 'flagsEnableToggleBtn';
+        enableBtn.className = 'flags-bar-button';
+        enableBtn.title = 'Enable/Disable sending flags';
+        els.commandFlagsBar.appendChild(enableBtn);
+
+        // 2. Thinking Flag Toggle
+        const thinkingBtn = document.createElement('button');
+        thinkingBtn.id = 'thinkingToggleBtn';
+        thinkingBtn.className = 'flags-bar-button';
+        thinkingBtn.title = 'Cycle Thinking Mode (Default -> Think -> No Think)';
+        els.commandFlagsBar.appendChild(thinkingBtn);
+        updateThinkingButtonUI(state.thinkingMode); // Set initial UI using the new function
+
+        // 3. Standard Flag Toggles
+        STANDARD_FLAGS.forEach(flag => {
             const flagItem = document.createElement('div');
             flagItem.className = 'flag-item';
-
             const flagNameSpan = document.createElement('span');
             flagNameSpan.className = 'flag-name';
             flagNameSpan.textContent = flag;
             flagItem.appendChild(flagNameSpan);
-
             const toggleBtn = document.createElement('button');
-            toggleBtn.className = 'flag-toggle';
+            toggleBtn.className = 'flags-bar-button flag-toggle';
             toggleBtn.dataset.flag = flag;
-            // Use state.qwenFlags (reset in selectModel) to set initial appearance
-            toggleBtn.textContent = state.qwenFlags[flag] ? 'ON' : 'OFF';
-            if (state.qwenFlags[flag]) {
-                toggleBtn.classList.add('active');
-            } else {
-                 toggleBtn.classList.remove('active'); // Ensure it's off
-            }
+            toggleBtn.textContent = 'OFF';
             toggleBtn.title = `Click to toggle ${flag}`;
             flagItem.appendChild(toggleBtn);
-
-            els.qwenFlagsBar.appendChild(flagItem);
+            els.commandFlagsBar.appendChild(flagItem);
         });
-    } // Closes populateQwenFlagsBar
+
+        // 4. Custom Flag Input
+        const customInput = document.createElement('input');
+        customInput.type = 'text';
+        customInput.id = 'customFlagInput';
+        customInput.placeholder = 'Custom flag...';
+        customInput.title = 'Enter custom flag text to send';
+        els.commandFlagsBar.appendChild(customInput);
+        console.log("Command Flags Bar populated.");
+    } // Closes populateCommandFlagsBar
+
+
+    // Helper to Enable/Disable Flag Controls
+    function updateFlagControlsState(isEnabled) {
+        const bar = els.commandFlagsBar;
+        if (!bar) return;
+
+        bar.dataset.controlsDisabled = !isEnabled; // For CSS targeting
+
+        const thinkingBtn = bar.querySelector('#thinkingToggleBtn');
+        const standardToggles = bar.querySelectorAll('.flag-toggle');
+        const customInput = bar.querySelector('#customFlagInput');
+
+        if (thinkingBtn) thinkingBtn.disabled = !isEnabled;
+        if (customInput) customInput.disabled = !isEnabled;
+        standardToggles.forEach(btn => { btn.disabled = !isEnabled; });
+        // console.log(`Flag controls ${isEnabled ? 'enabled' : 'disabled'}`); // Reduced console noise
+    }
+
 
     // --- Core App Logic ---
     async function initialize() {
         loadHiddenModels();
+        populateCommandFlagsBar(); // Populate the static structure first
+        updateFlagControlsState(false); // Start with controls disabled
         showStatus('Connecting to API...', 'info');
         showInitialPlaceholder();
         renderModelDetails(null);
@@ -511,13 +669,14 @@ input[type="range"]:focus::-moz-range-thumb { box-shadow: 0 0 5px var(--light-co
 
              showStatus('Loading models...', 'info');
              await loadModels();
-             bindEvents();
+             bindEvents(); // Bind events AFTER elements are populated
              autoGrowTextarea(els.input);
          } catch (e) {
              showStatus(`Initialization Error: ${e.message}`, 'error');
              els.modelList.innerHTML = `<p style="color: var(--error-color);">API connection or initialization failed.</p>`;
              showInitialPlaceholder();
              renderModelDetails(null);
+             updateFlagControlsState(false); // Ensure disabled on error
              els.input.disabled = true;
              els.send.disabled = true;
          }
@@ -540,7 +699,10 @@ input[type="range"]:focus::-moz-range-thumb { box-shadow: 0 0 5px var(--light-co
                 const r = await fetch(`${API_BASE}/api/tags`);
                 if (!r.ok) throw new Error(`/api/tags failed with status ${r.status}`);
                 const j = await r.json();
-                models = (j.models || []);
+                models = (j.models || []).map(m => ({
+                     ...m,
+                     details: m.details || {}
+                 }));
                 ok = true;
             } catch (tagsError) {
                 console.warn("/api/tags failed:", tagsError.message, "Trying /v1/models...");
@@ -549,13 +711,19 @@ input[type="range"]:focus::-moz-range-thumb { box-shadow: 0 0 5px var(--light-co
                     const r = await fetch(`${API_BASE}/v1/models`);
                     if (!r.ok) throw new Error(`/v1/models failed with status ${r.status}`);
                     const j = await r.json();
-                    models = (j.data || []).map(m => ({ name: m.id, modified_at: m.created ? new Date(m.created * 1000).toISOString() : new Date().toISOString(), size: 0, details: null }));
+                    models = (j.data || []).map(m => ({
+                        name: m.id || m.name,
+                        modified_at: m.created ? new Date(m.created * 1000).toISOString() : (m.modified_at || new Date().toISOString()),
+                        size: m.size || 0,
+                        details: m.details || { family: m.family }
+                    }));
                     ok = true;
                 } catch (v1Error) {
                     console.error("Both /api/tags and /v1/models failed:", tagsError, v1Error);
                     throw new Error(`Failed to fetch models. /api/tags: ${tagsError.message}. /v1/models: ${v1Error.message}`);
                 }
             }
+
 
             if (ok) {
                 state.models = models.sort((a, b) => new Date(b.modified_at) - new Date(a.modified_at));
@@ -570,23 +738,20 @@ input[type="range"]:focus::-moz-range-thumb { box-shadow: 0 0 5px var(--light-co
             }
 
             const previouslySelected = state.selected?.name;
-            state.selected = null;
+            state.selected = null; // Deselect current model before potentially reselecting
             if (previouslySelected && state.models.some(m => m.name === previouslySelected)) {
                  console.log("Re-selecting previous model:", previouslySelected)
-                 selectModel(previouslySelected);
-            } else if (!state.selected) {
-                 showInitialPlaceholder();
-                 renderModelDetails(null);
-                 if(els.qwenFlagsBar) els.qwenFlagsBar.style.display = 'none';
+                 selectModel(previouslySelected); // This will handle UI updates
+            } else {
+                 // Explicitly handle the case where no model is selected after load
+                 selectModel(null); // Call selectModel with null to reset UI correctly
             }
 
         } catch (e) {
             console.error("Final error in loadModels:", e);
             showStatus(`Error loading models: ${e.message}`, 'error');
             els.modelList.innerHTML = `<p style="color: var(--error-color);">${e.message}. Check API endpoint and Ollama status.</p>`;
-            showInitialPlaceholder();
-            renderModelDetails(null);
-            if(els.qwenFlagsBar) els.qwenFlagsBar.style.display = 'none';
+            selectModel(null); // Ensure UI reset on error
         } finally {
             refreshButton.disabled = false;
             refreshButton.innerHTML = originalButtonHTML;
@@ -602,7 +767,7 @@ input[type="range"]:focus::-moz-range-thumb { box-shadow: 0 0 5px var(--light-co
              updateShowHiddenButton();
              return;
          }
-         els.modelList.innerHTML = visibleModels.map(m => `<div class="model-card${state.selected?.name === m.name ? ' selected':''}" data-model="${m.name}"><h3>${escapeHtml(m.name)}</h3> <p>${new Date(m.modified_at).toLocaleDateString()}</p> <button class="hide-model-btn" title="Hide model" data-model-hide="${escapeHtml(m.name)}"><i class="fa-solid fa-eye-slash"></i></button></div>`).join('');
+         els.modelList.innerHTML = visibleModels.map(m => `<div class="model-card${state.selected?.name === m.name ? ' selected':''}" data-model="${escapeHtml(m.name)}"><h3>${escapeHtml(m.name)}</h3> <p>${new Date(m.modified_at).toLocaleDateString()}</p> <button class="hide-model-btn" title="Hide model" data-model-hide="${escapeHtml(m.name)}"><i class="fa-solid fa-eye-slash"></i></button></div>`).join('');
          document.querySelectorAll('.model-card').forEach(card => {
              card.addEventListener('click', (e) => {
                  if (!e.target.closest('.hide-model-btn')) {
@@ -613,49 +778,77 @@ input[type="range"]:focus::-moz-range-thumb { box-shadow: 0 0 5px var(--light-co
          updateShowHiddenButton();
      } // Closes renderModels
 
-    // --- selectModel (Updated for Qwen Flags Bar) ---
+    // --- selectModel (Handles Command Flags Bar Logic) ---
     function selectModel(name) {
         removeInitialPlaceholder();
         state.selected = state.models.find(m => m.name === name) || null;
         state.history = [];
-        renderModels();
+        renderModels(); // Update selection highlight
         renderModelDetails(state.selected);
         els.messages.innerHTML = '';
 
-        const isQwen3Model = state.selected && state.selected.name.toLowerCase().includes('qwen3');
-
-        if (els.qwenFlagsBar) {
-            if (isQwen3Model) {
-                resetQwenFlagsState(); // Reset state to defaults (all false)
-                populateQwenFlagsBar(); // Create/update buttons based on reset state
-                els.qwenFlagsBar.style.display = 'flex';
-                console.log("Qwen3 model selected, showing flags bar (all flags OFF by default).");
-            } else {
-                els.qwenFlagsBar.style.display = 'none';
-                console.log("Non-Qwen3 model selected, hiding flags bar.");
-            }
-        }
+        const enableBtn = els.commandFlagsBar?.querySelector('#flagsEnableToggleBtn');
+        const standardToggles = els.commandFlagsBar?.querySelectorAll('.flag-toggle');
+        const customInput = els.commandFlagsBar?.querySelector('#customFlagInput');
 
         if (state.selected) {
-            const readyMessage = `Ready with ${name}. ${isQwen3Model ? 'Qwen flags available.' : ''}`;
+            const modelNameLower = state.selected.name.toLowerCase();
+            const isQwenModel = modelNameLower.includes('qwen'); // Simple check
+
+            // 1. Set Master Enable State & Button
+            state.flagsEnabled = isQwenModel; // Enable flags by default only for Qwen
+            if (enableBtn) {
+                enableBtn.textContent = state.flagsEnabled ? 'Enabled' : 'Enable';
+                enableBtn.classList.toggle('active', state.flagsEnabled);
+                enableBtn.disabled = false; // Master button is always enabled when a model is selected
+            }
+
+            // 2. Set Thinking Mode State & Update Button UI using the new function
+            state.thinkingMode = isQwenModel ? 2 : 0; // NO THINK for Qwen, DEFAULT otherwise
+            updateThinkingButtonUI(state.thinkingMode); // *** USE REFACTORED FUNCTION ***
+
+             // 3. Reset Standard Flags to OFF
+             if (standardToggles) {
+                 standardToggles.forEach(btn => {
+                     btn.classList.remove('active');
+                     btn.textContent = 'OFF';
+                 });
+             }
+
+             // 4. Reset Custom Flag Input
+             if (customInput) {
+                 customInput.value = '';
+             }
+
+             // 5. Enable/Disable Controls based on Master State
+             updateFlagControlsState(state.flagsEnabled); // Enable/disable based on initial master state
+
+            const readyMessage = `Ready with ${name}.`;
             const aiMsgDiv = addMessage('ai', readyMessage);
             addCopyButton(aiMsgDiv);
             els.input.disabled = false;
             els.send.disabled = false;
             els.input.focus();
             autoGrowTextarea(els.input);
-            showStatus(`Selected: ${name}`, 'info');
-        } else {
+            showStatus(`Selected: ${name}. Flags ${state.flagsEnabled ? 'enabled' : 'disabled'} by default.`, 'info');
+
+        } else { // No model selected
             showInitialPlaceholder();
             renderModelDetails(null);
+            if (enableBtn) {
+                 enableBtn.textContent = 'Enable';
+                 enableBtn.classList.remove('active');
+                 enableBtn.disabled = true; // Disable master if no model selected
+            }
+            updateThinkingButtonUI(0); // *** USE REFACTORED FUNCTION to set DEFAULT ***
+            updateFlagControlsState(false); // Disable all other controls
             els.input.disabled = true;
             els.send.disabled = true;
-            if (els.qwenFlagsBar) els.qwenFlagsBar.style.display = 'none';
             showStatus('No model selected.', 'warning');
         }
     } // Closes selectModel
 
-    // --- sendMessage (Handles /no_think default & filtering) ---
+    // --- sendMessage (Handles Command Flags) ---
     async function sendMessage() {
         let text = els.input.value.trim();
         const systemPrompt = els.systemPrompt.value.trim();
@@ -667,43 +860,49 @@ input[type="range"]:focus::-moz-range-thumb { box-shadow: 0 0 5px var(--light-co
 
         removeInitialPlaceholder();
 
-        // --- Qwen Flags Appending Logic ---
-        const isQwen3Model = state.selected && state.selected.name.toLowerCase().includes('qwen3');
+        // --- Command Flags Appending Logic ---
         let flagsToAppend = '';
-        let sendNoThink = false; // Track if /no_think should be sent
+        let sendNoThink = false; // Track if /no_think should be sent for filtering
 
-        if (isQwen3Model) {
-            QWEN_FLAGS.forEach(flag => {
-                if (flag === '/thinking') {
-                    // Special logic: If UI toggle is OFF (state is false), send /no_think
-                    // If UI toggle is ON (state is true), send /think
-                    if (state.qwenFlags[flag]) {
-                        flagsToAppend += ` /think`;
-                    } else {
-                        flagsToAppend += ` /no_think`;
-                        sendNoThink = true; // Mark that /no_think was sent for filtering
-                    }
-                } else {
-                    // Other flags: only append if UI toggle is ON (state is true)
-                    if (state.qwenFlags[flag]) {
-                        flagsToAppend += ` ${flag}`;
-                    }
+        if (state.flagsEnabled) { // Only append if master toggle is ON
+            // 1. Thinking Flag
+            const thinkingCommand = THINKING_MODES[state.thinkingMode].command;
+            if (thinkingCommand) {
+                flagsToAppend += ` ${thinkingCommand}`;
+                if (thinkingCommand === '/no_think') {
+                    sendNoThink = true;
+                }
+            }
+
+            // 2. Standard Flags
+            els.commandFlagsBar?.querySelectorAll('.flag-toggle.active').forEach(btn => {
+                if (btn.dataset.flag) {
+                    flagsToAppend += ` ${btn.dataset.flag}`;
                 }
             });
 
+            // 3. Custom Flag
+            const customInput = els.commandFlagsBar?.querySelector('#customFlagInput');
+            const customFlagValue = customInput ? customInput.value.trim() : '';
+            if (customFlagValue) {
+                 flagsToAppend += ` ${customFlagValue}`;
+            }
+
             if (flagsToAppend) {
-                text += flagsToAppend;
+                text += flagsToAppend; // Append flags after user text
                 console.log(`Appended flags:${flagsToAppend}`);
             }
+        } else {
+             console.log("Flags disabled, not appending.");
         }
         // Determine if filtering is needed based on whether /no_think was just appended
         const shouldFilterResponse = sendNoThink;
         // Regex to find the tag pair with optional whitespace inside
         const tagRegex = /^<think>\s*<\/think>/;
-        // --- End Qwen Flags Appending ---
+        // --- End Command Flags Appending ---
 
         const userMsgDiv = addMessage('user', text);
-        state.history.push({ role: 'user', content: text });
+        state.history.push({ role: 'user', content: text }); // Push text *with* flags
         els.input.value = '';
         autoGrowTextarea(els.input);
 
@@ -713,10 +912,11 @@ input[type="range"]:focus::-moz-range-thumb { box-shadow: 0 0 5px var(--light-co
         }
         messagesToSend = messagesToSend.concat(state.history);
 
-        els.input.disabled = els.send.disabled = true;
-        if (els.qwenFlagsBar) {
-             els.qwenFlagsBar.querySelectorAll('.flag-toggle').forEach(btn => btn.disabled = true);
-        }
+        els.input.disabled = true;
+        els.send.disabled = true;
+        const masterFlagBtn = els.commandFlagsBar?.querySelector('#flagsEnableToggleBtn');
+        if(masterFlagBtn) masterFlagBtn.disabled = true; // Disable master during generation
+        updateFlagControlsState(false); // Disable other flag controls during generation
         els.loading.style.display = 'block';
 
         let aiMsgElement = null;
@@ -760,27 +960,24 @@ input[type="range"]:focus::-moz-range-thumb { box-shadow: 0 0 5px var(--light-co
                                          // Found the complete tag pattern at the start!
                                          const matchedPrefix = match[0];
                                          const contentAfterTag = fullResponse.substring(matchedPrefix.length);
-
-                                         // Rewrite display
                                          textContentElement.textContent = ''; // Clear previous parts
                                          if (contentAfterTag) {
                                              textContentElement.appendChild(document.createTextNode(contentAfterTag));
                                          }
                                          textToDisplay = ''; // Don't append original delta later
-
                                          console.log(`Filtered pattern '${matchedPrefix.replace('\n', '\\n')}' prefix from display.`);
                                          filterApplied = true; // Mark filtering as done for display
                                      } else {
-                                         // Check if we might be *in the middle* of receiving the pattern
-                                         if (fullResponse.length < "<think>".length + "</think>".length &&
-                                             tagRegex.source.slice(1).startsWith(fullResponse.replace(/</g,'\\<'))) {
+                                         const patternStart = "<think>";
+                                         const patternEnd = "</think>";
+                                         if (fullResponse.length < patternStart.length + patternEnd.length &&
+                                              patternStart.startsWith(fullResponse.trimLeft()) &&
+                                              !fullResponse.includes(patternEnd)) {
                                                 textToDisplay = ''; // Display nothing yet, wait
+                                                // console.log("Potentially waiting for </think> tag completion, hiding delta.");
                                          }
-                                         // If it doesn't match and isn't a likely partial start, display delta normally.
                                      }
                                  }
-
-                                 // Append textToDisplay if needed
                                  if (textToDisplay) {
                                      textContentElement.appendChild(document.createTextNode(textToDisplay));
                                  }
@@ -795,18 +992,14 @@ input[type="range"]:focus::-moz-range-thumb { box-shadow: 0 0 5px var(--light-co
                  } // Closes if (value)
              } // Closes while loop
 
-             // --- History Prefix Filtering (Using Regex) ---
              let finalResponseForHistory = fullResponse;
-             if (shouldFilterResponse) { // Check only if filtering was intended
-                  const historyMatch = fullResponse.match(tagRegex); // Use the same regex
+             if (shouldFilterResponse) {
+                  const historyMatch = fullResponse.match(tagRegex);
                   if (historyMatch) {
-                      finalResponseForHistory = fullResponse.substring(historyMatch[0].length); // Remove the matched prefix length
+                      finalResponseForHistory = fullResponse.substring(historyMatch[0].length);
                       console.log(`Filtered tag pattern '${historyMatch[0].replace('\n','\\n')}' prefix from history.`);
                   }
              }
-             // --- End History Filtering ---
-
-             // Only push non-empty history
              if (finalResponseForHistory && finalResponseForHistory.trim() !== '') {
                  state.history.push({ role:'assistant', content: finalResponseForHistory });
              } else {
@@ -834,17 +1027,17 @@ input[type="range"]:focus::-moz-range-thumb { box-shadow: 0 0 5px var(--light-co
              if (state.selected) {
                  els.input.disabled = false;
                  els.send.disabled = false;
-                 if (els.qwenFlagsBar && els.qwenFlagsBar.style.display !== 'none') {
-                     els.qwenFlagsBar.querySelectorAll('.flag-toggle').forEach(btn => btn.disabled = false);
-                 }
+                 const masterFlagBtn = els.commandFlagsBar?.querySelector('#flagsEnableToggleBtn');
+                 if(masterFlagBtn) masterFlagBtn.disabled = false; // Re-enable master button
+                 updateFlagControlsState(state.flagsEnabled); // Re-enable other controls based on master state
                  els.input.focus();
                  autoGrowTextarea(els.input);
              } else {
                  els.input.disabled = true;
                  els.send.disabled = true;
-                 if (els.qwenFlagsBar) {
-                      els.qwenFlagsBar.querySelectorAll('.flag-toggle').forEach(btn => btn.disabled = true);
-                 }
+                  const masterFlagBtn = els.commandFlagsBar?.querySelector('#flagsEnableToggleBtn');
+                  if(masterFlagBtn) masterFlagBtn.disabled = true; // Keep disabled if no model selected
+                 updateFlagControlsState(false); // Keep others disabled
              }
         } // Closes finally
     } // Closes sendMessage
@@ -908,7 +1101,7 @@ input[type="range"]:focus::-moz-range-thumb { box-shadow: 0 0 5px var(--light-co
          }
      } // Closes pullModel
 
-     // --- bindEvents (Handles Qwen Flags Bar) ---
+     // --- bindEvents (Handles Command Flags Bar) ---
      function bindEvents() {
         els.refresh.addEventListener('click', loadModels);
         els.send.addEventListener('click', sendMessage);
@@ -945,8 +1138,24 @@ input[type="range"]:focus::-moz-range-thumb { box-shadow: 0 0 5px var(--light-co
         });
 
         // Modal Event Listeners
-        els.gettingStartedBtn.addEventListener('click', (e) => { e.preventDefault(); populateGettingStarted(); openModal(els.gettingStartedModal); });
-        els.cliGuideBtn.addEventListener('click', (e) => { e.preventDefault(); populateCliGuide(); openModal(els.cliGuideModal); });
+        els.gettingStartedBtn.addEventListener('click', (e) => {
+            console.log("Getting Started button clicked."); // Log 1 (Keep for debug)
+            e.preventDefault();
+            try {
+                console.log("Calling populateGettingStarted..."); // Log 2 (Keep for debug)
+                populateGettingStarted();
+                console.log("populateGettingStarted completed. Calling openModal..."); // Log 3 (Keep for debug)
+                openModal(els.gettingStartedModal);
+                console.log("openModal called for gettingStartedModal."); // Log 4 (Keep for debug)
+            } catch (error) {
+                console.error("Error in Getting Started click handler:", error); // Log Error
+            }
+        });
+        els.cliGuideBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            populateCliGuide();
+            openModal(els.cliGuideModal);
+        });
         document.querySelectorAll('.help-modal').forEach(modal => {
             const closeBtn = modal.querySelector('.close-modal');
             const overlay = modal.querySelector('.modal-overlay');
@@ -964,17 +1173,12 @@ input[type="range"]:focus::-moz-range-thumb { box-shadow: 0 0 5px var(--light-co
                     state.hiddenModels.push(modelNameToHide);
                     saveHiddenModels();
                     if(state.selected?.name === modelNameToHide) {
-                        state.selected = null;
-                        renderModelDetails(null);
-                        showInitialPlaceholder();
-                        els.input.disabled = true;
-                        els.send.disabled = true;
-                        if (els.qwenFlagsBar) { // Hide flags bar if selected model hidden
-                            els.qwenFlagsBar.style.display = 'none';
-                        }
+                        state.selected = null; // Deselect if hidden
+                        selectModel(null); // Update UI to reflect no selection
                         showStatus('Model hidden. Select another model.', 'info');
+                    } else {
+                         renderModels(); // Just re-render list if hidden model wasn't selected
                     }
-                    renderModels();
                 }
             }
         });
@@ -992,29 +1196,34 @@ input[type="range"]:focus::-moz-range-thumb { box-shadow: 0 0 5px var(--light-co
         els.pullModelBtn.addEventListener('click', () => { const modelName = els.pullModelName.value.trim(); pullModel(modelName); });
         els.pullModelName.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); pullModel(els.pullModelName.value.trim()); } });
 
-        // --- Listener for Qwen Flags Bar (Event Delegation) ---
-        if (els.qwenFlagsBar) {
-            els.qwenFlagsBar.addEventListener('click', (event) => {
+        // --- Listener for Command Flags Bar (Event Delegation) ---
+        if (els.commandFlagsBar) {
+            els.commandFlagsBar.addEventListener('click', (event) => {
                 const target = event.target;
-                if (target.classList.contains('flag-toggle')) {
-                    const flag = target.dataset.flag;
-                    if (flag && state.qwenFlags.hasOwnProperty(flag)) {
-                        state.qwenFlags[flag] = !state.qwenFlags[flag]; // Toggle state
-                        // Update appearance
-                        target.textContent = state.qwenFlags[flag] ? 'ON' : 'OFF';
-                        if (state.qwenFlags[flag]) {
-                            target.classList.add('active');
-                        } else {
-                            target.classList.remove('active');
-                        }
-                        console.log(`Qwen flag ${flag} UI toggled to ${state.qwenFlags[flag] ? 'ON' : 'OFF'}`);
-                    } else {
-                        console.warn("Clicked flag toggle button without valid flag data:", target);
-                    }
+
+                // 1. Master Enable Toggle
+                if (target.id === 'flagsEnableToggleBtn') {
+                    state.flagsEnabled = !state.flagsEnabled;
+                    target.textContent = state.flagsEnabled ? 'Enabled' : 'Enable';
+                    target.classList.toggle('active', state.flagsEnabled);
+                    updateFlagControlsState(state.flagsEnabled); // Enable/disable others
+                    console.log(`Flags master toggle set to ${state.flagsEnabled}`);
+                }
+                // 2. Thinking Mode Toggle
+                else if (target.id === 'thinkingToggleBtn') {
+                    state.thinkingMode = (state.thinkingMode + 1) % THINKING_MODES.length; // Cycle 0 -> 1 -> 2 -> 0
+                    updateThinkingButtonUI(state.thinkingMode); // *** USE REFACTORED FUNCTION ***
+                    console.log(`Thinking mode set to ${THINKING_MODES[state.thinkingMode].text} (mode ${state.thinkingMode})`);
+                }
+                // 3. Standard Flag Toggles
+                else if (target.classList.contains('flag-toggle')) {
+                    const isActive = target.classList.toggle('active');
+                    target.textContent = isActive ? 'ON' : 'OFF';
+                    console.log(`Flag ${target.dataset.flag} toggled to ${isActive ? 'ON' : 'OFF'}`);
                 }
             });
         }
-        // --- End of Qwen Flags Listener ---
+        // --- End of Command Flags Listener ---
 
      } // Closing brace for bindEvents function definition
 
